@@ -1,0 +1,45 @@
+# === Node.js (Server) ===
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+.env.*
+!.env.example
+dist/
+build/
+
+# === iOS (Client) ===
+## Build
+DerivedData/
+build/
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## CocoaPods
+Pods/
+
+## Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
+
+## Xcode
+xcuserdata/
+*.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+*.xcodeproj/project.xcworkspace/
+*.xcodeproj/xcuserdata/
+*.playground/timeline.xctimeline
+*.playground/playground.xcworkspace
+
+## Code Injection
+iOSInjectionProject/
+
+# === General ===
+.DS_Store
+*.swp
+*.swo
+*~
+.vscode/
+.idea/

@@ -1,0 +1,31 @@
+{
+  "name": "rewardsfinder-v2",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "local": "node dist/local/main.js",
+    "remote": "node dist/remote/main.js",
+    "dev:local": "tsx src/local/main.ts",
+    "dev:remote": "tsx src/remote/main.ts",
+    "rsync": "node dist/local/run-rsync.js",
+    "dev:rsync": "tsx src/local/run-rsync.ts"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.2.0",
+    "dotenv": "^16.4.7",
+    "fastify": "^5.3.3",
+    "@fastify/cors": "^11.0.1",
+    "node-cron": "^3.0.3",
+    "puppeteer": "^24.10.2",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "user-agents": "^1.1.643"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node-cron": "^3.0.11",
+    "@types/user-agents": "^1.0.4",
+    "typescript": "^5.8.3",
+    "tsx": "^4.19.4"
+  }
+}
