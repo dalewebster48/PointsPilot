@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AirportPickerViewController" customModule="PointsPilot" customModuleProvider="target">
+            <connections>
+                <outlet property="view" destination="root" id="ov"/>
+                <outlet property="tableView" destination="tv" id="o1"/>
+                <outlet property="activityIndicator" destination="ai" id="o2"/>
+                <outlet property="emptyLabel" destination="el" id="o3"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="root">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="singleLine" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="tv">
+                    <rect key="frame" x="0.0" y="59" width="393" height="759"/>
+                </tableView>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="ai">
+                    <rect key="frame" x="179" y="408" width="37" height="37"/>
+                </activityIndicatorView>
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" text="No airports found" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="el">
+                    <rect key="frame" x="117" y="416" width="159" height="20"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="sa"/>
+            <constraints>
+                <constraint firstItem="tv" firstAttribute="top" secondItem="sa" secondAttribute="top" id="c1"/>
+                <constraint firstItem="tv" firstAttribute="leading" secondItem="sa" secondAttribute="leading" id="c2"/>
+                <constraint firstItem="tv" firstAttribute="trailing" secondItem="sa" secondAttribute="trailing" id="c3"/>
+                <constraint firstItem="tv" firstAttribute="bottom" secondItem="sa" secondAttribute="bottom" id="c4"/>
+                <constraint firstItem="ai" firstAttribute="centerX" secondItem="root" secondAttribute="centerX" id="c5"/>
+                <constraint firstItem="ai" firstAttribute="centerY" secondItem="root" secondAttribute="centerY" id="c6"/>
+                <constraint firstItem="el" firstAttribute="centerX" secondItem="root" secondAttribute="centerX" id="c7"/>
+                <constraint firstItem="el" firstAttribute="centerY" secondItem="root" secondAttribute="centerY" id="c8"/>
+            </constraints>
+        </view>
+    </objects>
+</document>

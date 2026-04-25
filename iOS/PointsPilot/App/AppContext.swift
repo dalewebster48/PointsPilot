@@ -8,7 +8,8 @@ final class AppContext {
     let viewControllerFactory: ViewControllerFactory
 
     init() {
-        let dataAccess = DebugDataAccessContainer()
+        let networkClient = URLSessionNetworkClient()
+        let dataAccess = AppDataAccessContainer(networkClient: networkClient)
         let services = ServicesContainer(dataAccess: dataAccess)
         let navigator = AppNavigator()
         let viewModelFactory = ViewModelFactory(services: services, navigator: navigator)
@@ -24,7 +25,7 @@ final class AppContext {
     }
 
     func bootstrap(window: UIWindow) {
-        let rootViewController = viewControllerFactory.makeHomeViewController()
+        let rootViewController = viewControllerFactory.makeFlightResultsViewController()
         let navigationController = UINavigationController(rootViewController: rootViewController)
         navigator.setRootNavigationController(navigationController)
         window.rootViewController = navigationController

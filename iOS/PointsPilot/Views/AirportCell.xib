@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="AirportCell" rowHeight="60" id="cell" customClass="AirportCell" customModule="PointsPilot" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="60"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="cell" id="content">
+                <rect key="frame" x="0.0" y="0.0" width="393" height="60"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="LHR" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="code">
+                        <rect key="frame" x="16" y="12" width="40" height="20"/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="40" id="cw"/>
+                        </constraints>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="London Heathrow" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="name">
+                        <rect key="frame" x="64" y="12" width="313" height="20"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="United Kingdom" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="country">
+                        <rect key="frame" x="64" y="34" width="313" height="16"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    </label>
+                </subviews>
+            </tableViewCellContentView>
+            <constraints>
+                <constraint firstItem="code" firstAttribute="leading" secondItem="cell" secondAttribute="leading" constant="16" id="c1"/>
+                <constraint firstItem="code" firstAttribute="top" secondItem="cell" secondAttribute="top" constant="12" id="c2"/>
+                <constraint firstItem="name" firstAttribute="leading" secondItem="code" secondAttribute="trailing" constant="8" id="c3"/>
+                <constraint firstItem="name" firstAttribute="top" secondItem="cell" secondAttribute="top" constant="12" id="c4"/>
+                <constraint firstAttribute="trailing" secondItem="name" secondAttribute="trailing" constant="16" id="c5"/>
+                <constraint firstItem="country" firstAttribute="leading" secondItem="name" secondAttribute="leading" id="c6"/>
+                <constraint firstItem="country" firstAttribute="top" secondItem="name" secondAttribute="bottom" constant="2" id="c7"/>
+                <constraint firstAttribute="trailing" secondItem="country" secondAttribute="trailing" constant="16" id="c8"/>
+            </constraints>
+            <connections>
+                <outlet property="codeLabel" destination="code" id="o1"/>
+                <outlet property="nameLabel" destination="name" id="o2"/>
+                <outlet property="countryLabel" destination="country" id="o3"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+</document>

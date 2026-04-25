@@ -1,7 +1,6 @@
 import Foundation
 
 protocol DataAccessContainer: AnyObject {
-}
-
-final class DebugDataAccessContainer: DataAccessContainer {
+    var flightRepository: any FlightRepository { get }
+    var airportRepository: any AirportRepository { get }
 }

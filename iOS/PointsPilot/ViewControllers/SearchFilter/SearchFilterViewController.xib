@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SearchFilterViewController" customModule="PointsPilot" customModuleProvider="target">
+            <connections>
+                <outlet property="view" destination="root" id="ov"/>
+                <outlet property="originButton" destination="ob" id="o1"/>
+                <outlet property="destinationButton" destination="db" id="o2"/>
+                <outlet property="dateFromPicker" destination="dfp" id="o3"/>
+                <outlet property="dateToPicker" destination="dtp" id="o4"/>
+                <outlet property="economyMinField" destination="emf" id="o5"/>
+                <outlet property="economyMaxField" destination="exf" id="o6"/>
+                <outlet property="economyDealSwitch" destination="esw" id="o7"/>
+                <outlet property="premiumMinField" destination="pmf" id="o8"/>
+                <outlet property="premiumMaxField" destination="pxf" id="o9"/>
+                <outlet property="premiumDealSwitch" destination="psw" id="o10"/>
+                <outlet property="upperMinField" destination="umf" id="o11"/>
+                <outlet property="upperMaxField" destination="uxf" id="o12"/>
+                <outlet property="upperDealSwitch" destination="usw" id="o13"/>
+                <outlet property="applyButton" destination="ab" id="o14"/>
+                <outlet property="clearButton" destination="cb" id="o15"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="root">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sv">
+                    <rect key="frame" x="0.0" y="59" width="393" height="759"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cvw">
+                            <rect key="frame" x="0.0" y="0.0" width="393" height="700"/>
+                            <subviews>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="ms">
+                                    <rect key="frame" x="16" y="16" width="361" height="668"/>
+                                    <subviews>
+                                        <!-- Route Section -->
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="rs">
+                                            <rect key="frame" x="0.0" y="0.0" width="361" height="90"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Route" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rh">
+                                                    <rect key="frame" x="0.0" y="0.0" width="361" height="22"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ob">
+                                                    <rect key="frame" x="0.0" y="30" width="361" height="26"/>
+                                                    <state key="normal" title="Select origin..."/>
+                                                    <connections>
+                                                        <action selector="originTapped" destination="-1" eventType="touchUpInside" id="a1"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="db">
+                                                    <rect key="frame" x="0.0" y="64" width="361" height="26"/>
+                                                    <state key="normal" title="Select destination..."/>
+                                                    <connections>
+                                                        <action selector="destinationTapped" destination="-1" eventType="touchUpInside" id="a2"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                        </stackView>
+                                        <!-- Dates Section -->
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ds">
+                                            <rect key="frame" x="0.0" y="114" width="361" height="102"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Dates" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dh">
+                                                    <rect key="frame" x="0.0" y="0.0" width="361" height="22"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="dfs">
+                                                    <rect key="frame" x="0.0" y="30" width="361" height="34"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="From" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dfl">
+                                                            <rect key="frame" x="0.0" y="7" width="40" height="20"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="40" id="dflw"/>
+                                                            </constraints>
+                                                        </label>
+                                                        <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" preferredDatePickerStyle="compact" translatesAutoresizingMaskIntoConstraints="NO" id="dfp">
+                                                            <rect key="frame" x="48" y="0.0" width="120" height="34"/>
+                                                            <connections>
+                                                                <action selector="dateFromChanged" destination="-1" eventType="valueChanged" id="a3"/>
+                                                            </connections>
+                                                        </datePicker>
+                                                    </subviews>
+                                                </stackView>
+                                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="dts">
+                                                    <rect key="frame" x="0.0" y="72" width="361" height="34"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="To" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dtl">
+                                                            <rect key="frame" x="0.0" y="7" width="40" height="20"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="40" id="dtlw"/>
+                                                            </constraints>
+                                                        </label>
+                                                        <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" preferredDatePickerStyle="compact" translatesAutoresizingMaskIntoConstraints="NO" id="dtp">
+                                                            <rect key="frame" x="48" y="0.0" width="120" height="34"/>
+                                                            <connections>
+                                                                <action selector="dateToChanged" destination="-1" eventType="valueChanged" id="a4"/>
+                                                            </connections>
+                                                        </datePicker>
+                                                    </subviews>
+                                                </stackView>
+                                            </subviews>
+                                        </stackView>
+                                        <!-- Economy Section -->
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="es">
+                                            <rect key="frame" x="0.0" y="240" width="361" height="95"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Economy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eh">
+                                                    <rect key="frame" x="0.0" y="0.0" width="361" height="22"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="efs">
+                                                    <rect key="frame" x="0.0" y="30" width="361" height="34"/>
+                                                    <subviews>
+                                                        <textField borderStyle="roundedRect" placeholder="Min points" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="emf">
+                                                            <rect key="frame" x="0.0" y="0.0" width="176" height="34"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <connections>
+                                                                <action selector="economyMinChanged" destination="-1" eventType="editingChanged" id="a5"/>
+                                                            </connections>
+                                                        </textField>
+                                                        <textField borderStyle="roundedRect" placeholder="Max points" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="exf">
+                                                            <rect key="frame" x="184" y="0.0" width="177" height="34"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <connections>
+                                                                <action selector="economyMaxChanged" destination="-1" eventType="editingChanged" id="a6"/>
+                                                            </connections>
+                                                        </textField>
+                                                    </subviews>
+                                                </stackView>
+                                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="eds">
+                                                    <rect key="frame" x="0.0" y="72" width="361" height="31"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Deals only" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="edl">
+                                                            <rect key="frame" x="0.0" y="5" width="310" height="20"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="esw">
+                                                            <rect key="frame" x="310" y="0.0" width="51" height="31"/>
+                                                            <connections>
+                                                                <action selector="economyDealChanged" destination="-1" eventType="valueChanged" id="a7"/>
+                                                            </connections>
+                                                        </switch>
+                                                    </subviews>
+                                                </stackView>
+                                            </subviews>
+                                        </stackView>
+                                        <!-- Premium Section -->
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ps">
+                                            <rect key="frame" x="0.0" y="359" width="361" height="95"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Premium" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ph">
+                                                    <rect key="frame" x="0.0" y="0.0" width="361" height="22"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="pfs">
+                                                    <rect key="frame" x="0.0" y="30" width="361" height="34"/>
+                                                    <subviews>
+                                                        <textField borderStyle="roundedRect" placeholder="Min points" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="pmf">
+                                                            <rect key="frame" x="0.0" y="0.0" width="176" height="34"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <connections>
+                                                                <action selector="premiumMinChanged" destination="-1" eventType="editingChanged" id="a8"/>
+                                                            </connections>
+                                                        </textField>
+                                                        <textField borderStyle="roundedRect" placeholder="Max points" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="pxf">
+                                                            <rect key="frame" x="184" y="0.0" width="177" height="34"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <connections>
+                                                                <action selector="premiumMaxChanged" destination="-1" eventType="editingChanged" id="a9"/>
+                                                            </connections>
+                                                        </textField>
+                                                    </subviews>
+                                                </stackView>
+                                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="pds">
+                                                    <rect key="frame" x="0.0" y="72" width="361" height="31"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Deals only" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pdl">
+                                                            <rect key="frame" x="0.0" y="5" width="310" height="20"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="psw">
+                                                            <rect key="frame" x="310" y="0.0" width="51" height="31"/>
+                                                            <connections>
+                                                                <action selector="premiumDealChanged" destination="-1" eventType="valueChanged" id="a10"/>
+                                                            </connections>
+                                                        </switch>
+                                                    </subviews>
+                                                </stackView>
+                                            </subviews>
+                                        </stackView>
+                                        <!-- Upper Section -->
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="us">
+                                            <rect key="frame" x="0.0" y="478" width="361" height="95"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Upper" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uh">
+                                                    <rect key="frame" x="0.0" y="0.0" width="361" height="22"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ufs">
+                                                    <rect key="frame" x="0.0" y="30" width="361" height="34"/>
+                                                    <subviews>
+                                                        <textField borderStyle="roundedRect" placeholder="Min points" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="umf">
+                                                            <rect key="frame" x="0.0" y="0.0" width="176" height="34"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <connections>
+                                                                <action selector="upperMinChanged" destination="-1" eventType="editingChanged" id="a11"/>
+                                                            </connections>
+                                                        </textField>
+                                                        <textField borderStyle="roundedRect" placeholder="Max points" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uxf">
+                                                            <rect key="frame" x="184" y="0.0" width="177" height="34"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <connections>
+                                                                <action selector="upperMaxChanged" destination="-1" eventType="editingChanged" id="a12"/>
+                                                            </connections>
+                                                        </textField>
+                                                    </subviews>
+                                                </stackView>
+                                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="uds">
+                                                    <rect key="frame" x="0.0" y="72" width="361" height="31"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Deals only" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="udl">
+                                                            <rect key="frame" x="0.0" y="5" width="310" height="20"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="usw">
+                                                            <rect key="frame" x="310" y="0.0" width="51" height="31"/>
+                                                            <connections>
+                                                                <action selector="upperDealChanged" destination="-1" eventType="valueChanged" id="a13"/>
+                                                            </connections>
+                                                        </switch>
+                                                    </subviews>
+                                                </stackView>
+                                            </subviews>
+                                        </stackView>
+                                        <!-- Buttons -->
+                                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="bs">
+                                            <rect key="frame" x="0.0" y="597" width="361" height="35"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cb">
+                                                    <rect key="frame" x="0.0" y="0.0" width="172" height="35"/>
+                                                    <state key="normal" title="Clear"/>
+                                                    <connections>
+                                                        <action selector="clearTapped" destination="-1" eventType="touchUpInside" id="a14"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ab">
+                                                    <rect key="frame" x="188" y="0.0" width="173" height="35"/>
+                                                    <state key="normal" title="Apply"/>
+                                                    <connections>
+                                                        <action selector="applyTapped" destination="-1" eventType="touchUpInside" id="a15"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                        </stackView>
+                                    </subviews>
+                                </stackView>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="ms" firstAttribute="top" secondItem="cvw" secondAttribute="top" constant="16" id="mc1"/>
+                                <constraint firstItem="ms" firstAttribute="leading" secondItem="cvw" secondAttribute="leading" constant="16" id="mc2"/>
+                                <constraint firstAttribute="trailing" secondItem="ms" secondAttribute="trailing" constant="16" id="mc3"/>
+                                <constraint firstAttribute="bottom" secondItem="ms" secondAttribute="bottom" constant="16" id="mc4"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="cvw" firstAttribute="top" secondItem="sv" secondAttribute="top" id="sc1"/>
+                        <constraint firstItem="cvw" firstAttribute="leading" secondItem="sv" secondAttribute="leading" id="sc2"/>
+                        <constraint firstItem="cvw" firstAttribute="trailing" secondItem="sv" secondAttribute="trailing" id="sc3"/>
+                        <constraint firstItem="cvw" firstAttribute="bottom" secondItem="sv" secondAttribute="bottom" id="sc4"/>
+                        <constraint firstItem="cvw" firstAttribute="width" secondItem="sv" secondAttribute="width" id="sc5"/>
+                    </constraints>
+                </scrollView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="sa"/>
+            <constraints>
+                <constraint firstItem="sv" firstAttribute="top" secondItem="sa" secondAttribute="top" id="rc1"/>
+                <constraint firstItem="sv" firstAttribute="leading" secondItem="sa" secondAttribute="leading" id="rc2"/>
+                <constraint firstItem="sv" firstAttribute="trailing" secondItem="sa" secondAttribute="trailing" id="rc3"/>
+                <constraint firstItem="sv" firstAttribute="bottom" secondItem="sa" secondAttribute="bottom" id="rc4"/>
+            </constraints>
+        </view>
+    </objects>
+</document>

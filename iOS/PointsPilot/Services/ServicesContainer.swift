@@ -1,9 +1,15 @@
 import Foundation
 
 final class ServicesContainer {
-    private let dataAccess: any DataAccessContainer
+    let flightService: any FlightService
+    let airportService: any AirportService
 
     init(dataAccess: any DataAccessContainer) {
-        self.dataAccess = dataAccess
+        self.flightService = FlightServiceImpl(
+            flightRepository: dataAccess.flightRepository
+        )
+        self.airportService = AirportServiceImpl(
+            airportRepository: dataAccess.airportRepository
+        )
     }
 }
