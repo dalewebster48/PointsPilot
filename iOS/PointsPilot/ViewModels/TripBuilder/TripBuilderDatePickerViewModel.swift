@@ -20,6 +20,7 @@ protocol TripBuilderDatePickerViewModelProtocol: AnyObject {
     var selectedMonths: Set<Int> { get }
     var rangeStartDate: Date? { get }
     var rangeEndDate: Date? { get }
+    var summaryViewModel: any TripBuilderSummaryViewModelProtocol { get }
 
     var viewDelegate: (any TripBuilderDatePickerViewModelViewDelegate)? { get set }
 
@@ -39,6 +40,7 @@ protocol TripBuilderDatePickerViewModelViewDelegate: AnyObject {
 final class TripBuilderDatePickerViewModel: TripBuilderDatePickerViewModelProtocol {
     private weak var pickerDelegate: (any TripBuilderDatePickerDelegate)?
     private let navigator: Navigator
+    private let summaryFactory: any TripBuilderSummaryViewModelFactory
 
     var mode: DatePickerMode = .specificDates { didSet { bind() } }
     var dateFrom: Date? { didSet { bind() } }
@@ -47,17 +49,34 @@ final class TripBuilderDatePickerViewModel: TripBuilderDatePickerViewModelProtoc
     var rangeStartDate: Date? { didSet { bind() } }
     var rangeEndDate: Date? { didSet { bind() } }
 
+    var summaryViewModel: any TripBuilderSummaryViewModelProtocol {
+        let instruction: String
+        switch mode {
+        case .specificDates: instruction = "Pick a departure and a return date"
+        case .byMonth: instruction = "Pick the months you can travel in"
+        case .flexibleRange: instruction = "Pick the earliest and latest dates you'd travel"
+        }
+        return summaryFactory.makeTripBuilderSummaryViewModel(
+            title: "When are you travelling?",
+            summary: NSAttributedString(),
+            instruction: instruction,
+            buttonTitle: "Ok"
+        )
+    }
+
     weak var viewDelegate: (any TripBuilderDatePickerViewModelViewDelegate)? {
         didSet { bind() }
     }
 
     init(
         navigator: Navigator,
+        summaryFactory: any TripBuilderSummaryViewModelFactory,
         pickerDelegate: any TripBuilderDatePickerDelegate,
         dateFrom: String?,
         dateTo: String?
     ) {
         self.navigator = navigator
+        self.summaryFactory = summaryFactory
         self.pickerDelegate = pickerDelegate
         self.dateFrom = dateFrom.flatMap { Self.dateFormatter.date(from: $0) }
         self.dateTo = dateTo.flatMap { Self.dateFormatter.date(from: $0) }

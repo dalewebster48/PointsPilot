@@ -16,14 +16,16 @@
                 <outlet property="dateFromPicker" destination="fromPicker" id="o5"/>
                 <outlet property="dateToPicker" destination="toPicker" id="o6"/>
                 <outlet property="monthsCollectionView" destination="monthsCV" id="o7"/>
-                <outlet property="rangeStartPicker" destination="rangeStart" id="o8"/>
-                <outlet property="rangeEndPicker" destination="rangeEnd" id="o9"/>
+                <outlet property="rangeSlider" destination="rangeSliderView" id="o8"/>
+                <outlet property="rangeLabel" destination="rangeLabel" id="o9"/>
+                <outlet property="summaryBanner" destination="banner" id="o10"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="root">
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <viewLayoutGuide key="safeArea" id="rootSafe"/>
             <subviews>
                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="segCtrl">
                     <rect key="frame" x="16" y="16" width="361" height="32"/>
@@ -92,39 +94,31 @@
                 </view>
                 <!-- Flexible range container -->
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rangeContainer">
-                    <rect key="frame" x="16" y="64" width="361" height="200"/>
+                    <rect key="frame" x="16" y="64" width="361" height="100"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Earliest" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="earliestLabel">
-                            <rect key="frame" x="0.0" y="0.0" width="60" height="20"/>
-                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Today – 12 months" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rangeLabel">
+                            <rect key="frame" x="0.0" y="0.0" width="361" height="22"/>
+                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                         </label>
-                        <datePicker contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="top" datePickerMode="date" preferredDatePickerStyle="compact" translatesAutoresizingMaskIntoConstraints="NO" id="rangeStart">
-                            <rect key="frame" x="0.0" y="28" width="200" height="34"/>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rangeSliderView" customClass="RangeSlider" customModule="PointsPilot" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="34" width="361" height="36"/>
                             <connections>
-                                <action selector="rangeStartChanged:" destination="-1" eventType="valueChanged" id="ra1"/>
+                                <action selector="rangeSliderChanged:" destination="-1" eventType="valueChanged" id="ra1"/>
                             </connections>
-                        </datePicker>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Latest" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="latestLabel">
-                            <rect key="frame" x="0.0" y="78" width="60" height="20"/>
-                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
-                        </label>
-                        <datePicker contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="top" datePickerMode="date" preferredDatePickerStyle="compact" translatesAutoresizingMaskIntoConstraints="NO" id="rangeEnd">
-                            <rect key="frame" x="0.0" y="106" width="200" height="34"/>
-                            <connections>
-                                <action selector="rangeEndChanged:" destination="-1" eventType="valueChanged" id="ra2"/>
-                            </connections>
-                        </datePicker>
+                        </view>
                     </subviews>
                     <constraints>
-                        <constraint firstItem="earliestLabel" firstAttribute="leading" secondItem="rangeContainer" secondAttribute="leading" id="r1"/>
-                        <constraint firstItem="earliestLabel" firstAttribute="top" secondItem="rangeContainer" secondAttribute="top" id="r2"/>
-                        <constraint firstItem="rangeStart" firstAttribute="leading" secondItem="rangeContainer" secondAttribute="leading" id="r3"/>
-                        <constraint firstItem="rangeStart" firstAttribute="top" secondItem="earliestLabel" secondAttribute="bottom" constant="8" id="r4"/>
-                        <constraint firstItem="latestLabel" firstAttribute="leading" secondItem="rangeContainer" secondAttribute="leading" id="r5"/>
-                        <constraint firstItem="latestLabel" firstAttribute="top" secondItem="rangeStart" secondAttribute="bottom" constant="16" id="r6"/>
-                        <constraint firstItem="rangeEnd" firstAttribute="leading" secondItem="rangeContainer" secondAttribute="leading" id="r7"/>
-                        <constraint firstItem="rangeEnd" firstAttribute="top" secondItem="latestLabel" secondAttribute="bottom" constant="8" id="r8"/>
+                        <constraint firstItem="rangeLabel" firstAttribute="leading" secondItem="rangeContainer" secondAttribute="leading" id="r1"/>
+                        <constraint firstAttribute="trailing" secondItem="rangeLabel" secondAttribute="trailing" id="r2"/>
+                        <constraint firstItem="rangeLabel" firstAttribute="top" secondItem="rangeContainer" secondAttribute="top" id="r3"/>
+                        <constraint firstItem="rangeSliderView" firstAttribute="leading" secondItem="rangeContainer" secondAttribute="leading" id="r4"/>
+                        <constraint firstAttribute="trailing" secondItem="rangeSliderView" secondAttribute="trailing" id="r5"/>
+                        <constraint firstItem="rangeSliderView" firstAttribute="top" secondItem="rangeLabel" secondAttribute="bottom" constant="12" id="r6"/>
+                        <constraint firstAttribute="bottom" secondItem="rangeSliderView" secondAttribute="bottom" id="r7"/>
                     </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="banner" customClass="TripBuilderSummary" customModule="PointsPilot" customModuleProvider="target">
+                    <rect key="frame" x="16" y="744" width="361" height="84"/>
                 </view>
             </subviews>
             <constraints>
@@ -137,9 +131,13 @@
                 <constraint firstItem="monthContainer" firstAttribute="leading" secondItem="root" secondAttribute="leading" constant="16" id="rc7"/>
                 <constraint firstAttribute="trailing" secondItem="monthContainer" secondAttribute="trailing" constant="16" id="rc8"/>
                 <constraint firstItem="monthContainer" firstAttribute="top" secondItem="segCtrl" secondAttribute="bottom" constant="16" id="rc9"/>
+                <constraint firstAttribute="bottom" secondItem="monthContainer" secondAttribute="bottom" id="rc9b"/>
                 <constraint firstItem="rangeContainer" firstAttribute="leading" secondItem="root" secondAttribute="leading" constant="16" id="rc10"/>
                 <constraint firstAttribute="trailing" secondItem="rangeContainer" secondAttribute="trailing" constant="16" id="rc11"/>
                 <constraint firstItem="rangeContainer" firstAttribute="top" secondItem="segCtrl" secondAttribute="bottom" constant="16" id="rc12"/>
+                <constraint firstItem="banner" firstAttribute="leading" secondItem="root" secondAttribute="leading" constant="16" id="b1"/>
+                <constraint firstAttribute="trailing" secondItem="banner" secondAttribute="trailing" constant="16" id="b2"/>
+                <constraint firstItem="rootSafe" firstAttribute="bottom" secondItem="banner" secondAttribute="bottom" constant="12" id="b3"/>
             </constraints>
         </view>
     </objects>

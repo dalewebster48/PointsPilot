@@ -81,6 +81,7 @@ final class ViewModelFactory {
     ) -> TripBuilderDatePickerViewModel {
         TripBuilderDatePickerViewModel(
             navigator: navigator,
+            summaryFactory: self,
             pickerDelegate: delegate,
             dateFrom: dateFrom,
             dateTo: dateTo
