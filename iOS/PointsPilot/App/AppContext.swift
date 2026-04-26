@@ -25,10 +25,6 @@ final class AppContext {
     }
 
     func bootstrap(window: UIWindow) {
-        let rootViewController = viewControllerFactory.makeFlightResultsViewController()
-        let navigationController = UINavigationController(rootViewController: rootViewController)
-        navigator.setRootNavigationController(navigationController)
-        window.rootViewController = navigationController
-        window.makeKeyAndVisible()
+        navigator.bootstrap(window: window)
     }
 }

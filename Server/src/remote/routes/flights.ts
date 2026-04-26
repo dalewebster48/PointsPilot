@@ -7,11 +7,14 @@ export function flightRoutes(fastify: FastifyInstance, db: Db) {
     fastify.get('/flights', async (request) => {
         const q = request.query as Record<string, string | undefined>
 
+        const parseMulti = (v: string): string | string[] =>
+            v.includes(',') ? v.split(',') : v
+
         const filter: FlightFilter = {}
-        if (q.origin) filter.origin = q.origin
-        if (q.destination) filter.destination = q.destination
-        if (q.originCountry) filter.originCountry = q.originCountry
-        if (q.destinationCountry) filter.destinationCountry = q.destinationCountry
+        if (q.origin) filter.origin = parseMulti(q.origin)
+        if (q.destination) filter.destination = parseMulti(q.destination)
+        if (q.originCountry) filter.originCountry = parseMulti(q.originCountry)
+        if (q.destinationCountry) filter.destinationCountry = parseMulti(q.destinationCountry)
         if (q.dateFrom) filter.dateFrom = q.dateFrom
         if (q.dateTo) filter.dateTo = q.dateTo
         if (q.economyCostMin) filter.economyCostMin = parseInt(q.economyCostMin)

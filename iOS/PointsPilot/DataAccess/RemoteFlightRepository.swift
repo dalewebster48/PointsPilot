@@ -26,6 +26,11 @@ private extension URL {
 
 // MARK: - Request
 
+private func commaSeparated(_ values: [String]?) -> String? {
+    guard let values, !values.isEmpty else { return nil }
+    return values.joined(separator: ",")
+}
+
 private struct FlightSearchRequest: Encodable {
     let origin: String?
     let destination: String?
@@ -51,10 +56,10 @@ private struct FlightSearchRequest: Encodable {
         limit: Int,
         offset: Int
     ) {
-        self.origin = filter.origin
-        self.destination = filter.destination
-        self.originCountry = filter.originCountry
-        self.destinationCountry = filter.destinationCountry
+        self.origin = commaSeparated(filter.origins)
+        self.destination = commaSeparated(filter.destinations)
+        self.originCountry = commaSeparated(filter.originCountries)
+        self.destinationCountry = commaSeparated(filter.destinationCountries)
         self.dateFrom = filter.dateFrom
         self.dateTo = filter.dateTo
         self.economyCostMin = filter.economyCostMin

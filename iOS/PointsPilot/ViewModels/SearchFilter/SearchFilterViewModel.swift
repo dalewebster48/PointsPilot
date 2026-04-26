@@ -88,8 +88,8 @@ final class SearchFilterViewModel: SearchFilterViewModelProtocol {
 
     func didTapApply() {
         let filter = FlightSearchFilter(
-            origin: originAirport?.code,
-            destination: destinationAirport?.code,
+            origins: originAirport.map { [$0.code] },
+            destinations: destinationAirport.map { [$0.code] },
             dateFrom: dateFrom.map { Self.dateFormatter.string(from: $0) },
             dateTo: dateTo.map { Self.dateFormatter.string(from: $0) },
             economyCostMin: economyCostMin,

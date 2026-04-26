@@ -20,13 +20,16 @@ protocol FlightResultsViewModelViewDelegate: AnyObject {
 final class FlightResultsViewModel: FlightResultsViewModelProtocol {
     private let flightService: any FlightService
     private let navigator: any Navigator
+    private let hasInitialFilter: Bool
     private let pageSize = 20
     private var currentOffset = 0
     private var isLoadingPage = false
 
     weak var viewDelegate: (any FlightResultsViewModelViewDelegate)? {
         didSet {
-            presentSearchFilter()
+            if !hasInitialFilter {
+                presentSearchFilter()
+            }
             fetchFlights(reset: true)
         }
     }
@@ -39,10 +42,16 @@ final class FlightResultsViewModel: FlightResultsViewModelProtocol {
 
     init(
         flightService: any FlightService,
-        navigator: any Navigator
+        navigator: any Navigator,
+        initialFilter: FlightSearchFilter? = nil
     ) {
         self.flightService = flightService
         self.navigator = navigator
+        self.hasInitialFilter = initialFilter != nil
+
+        if let initialFilter {
+            activeFilter = initialFilter
+        }
     }
 
     func didScrollNearEnd() {

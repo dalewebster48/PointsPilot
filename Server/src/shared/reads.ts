@@ -121,8 +121,8 @@ export function queryFlights(
     const conditions = conditionsFromFilter(filter, [
         { key: 'origin', column: 'flights.start', op: '=' },
         { key: 'destination', column: 'flights.end', op: '=' },
-        { key: 'originCountry', column: 'sa.country', op: 'LIKE' },
-        { key: 'destinationCountry', column: 'ea.country', op: 'LIKE' },
+        { key: 'originCountry', column: 'sa.country', op: '=' },
+        { key: 'destinationCountry', column: 'ea.country', op: '=' },
         { key: 'dateFrom', column: 'flights.date', op: '>=' },
         { key: 'dateTo', column: 'flights.date', op: '<=' },
         { key: 'economyCostMin', column: 'flights.economy_cost', op: '>=' },

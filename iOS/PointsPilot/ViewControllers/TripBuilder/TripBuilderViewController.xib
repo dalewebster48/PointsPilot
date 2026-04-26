@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TripBuilderViewController" customModule="PointsPilot" customModuleProvider="target">
+            <connections>
+                <outlet property="view" destination="root" id="ov"/>
+                <outlet property="originSectionView" destination="originSection" id="o1"/>
+                <outlet property="destinationSectionView" destination="destSection" id="o2"/>
+                <outlet property="dateSectionView" destination="dateSection" id="o3"/>
+                <outlet property="classSectionView" destination="classSection" id="o4"/>
+                <outlet property="searchButton" destination="searchBtn" id="o5"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="root">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="scrollView">
+                    <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="stack">
+                            <rect key="frame" x="16" y="16" width="361" height="400"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="originSection" customClass="TripBuilderSectionView" customModule="PointsPilot" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="361" height="72"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="72" id="osh"/>
+                                    </constraints>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="destSection" customClass="TripBuilderSectionView" customModule="PointsPilot" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="88" width="361" height="72"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="72" id="dsh"/>
+                                    </constraints>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dateSection" customClass="TripBuilderSectionView" customModule="PointsPilot" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="176" width="361" height="72"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="72" id="dtsh"/>
+                                    </constraints>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="classSection" customClass="TripBuilderSectionView" customModule="PointsPilot" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="264" width="361" height="72"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="72" id="csh"/>
+                                    </constraints>
+                                </view>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" translatesAutoresizingMaskIntoConstraints="NO" id="searchBtn">
+                                    <rect key="frame" x="0.0" y="352" width="361" height="48"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="48" id="sbh"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                    <state key="normal" title="Search"/>
+                                    <connections>
+                                        <action selector="didTapSearch" destination="-1" eventType="touchUpInside" id="sa1"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="stack" firstAttribute="leading" secondItem="scrollView" secondAttribute="leading" constant="16" id="sc1"/>
+                        <constraint firstItem="stack" firstAttribute="top" secondItem="scrollView" secondAttribute="top" constant="16" id="sc2"/>
+                        <constraint firstAttribute="trailing" secondItem="stack" secondAttribute="trailing" constant="16" id="sc3"/>
+                        <constraint firstAttribute="bottom" secondItem="stack" secondAttribute="bottom" constant="16" id="sc4"/>
+                        <constraint firstItem="stack" firstAttribute="width" secondItem="scrollView" secondAttribute="width" constant="-32" id="sc5"/>
+                    </constraints>
+                </scrollView>
+            </subviews>
+            <constraints>
+                <constraint firstItem="scrollView" firstAttribute="leading" secondItem="root" secondAttribute="leading" id="rc1"/>
+                <constraint firstItem="scrollView" firstAttribute="top" secondItem="root" secondAttribute="top" id="rc2"/>
+                <constraint firstAttribute="trailing" secondItem="scrollView" secondAttribute="trailing" id="rc3"/>
+                <constraint firstAttribute="bottom" secondItem="scrollView" secondAttribute="bottom" id="rc4"/>
+            </constraints>
+        </view>
+    </objects>
+</document>
