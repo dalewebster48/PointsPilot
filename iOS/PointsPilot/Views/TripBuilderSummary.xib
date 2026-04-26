@@ -31,28 +31,31 @@
                             <rect key="frame" x="0.0" y="0.0" width="423" height="28.666666666666668"/>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="24"/>
                         </label>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zqo-96-4vx" userLabel="Divider">
-                            <rect key="frame" x="0.0" y="44.666666666666671" width="423" height="2"/>
-                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="2" id="K7n-FS-uKG"/>
-                            </constraints>
-                        </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="750" text="Flying out of anywhere" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UfK-vj-4LH" userLabel="Instruction Label">
-                            <rect key="frame" x="0.0" y="62.666666666666679" width="423" height="14.333333333333336"/>
+                            <rect key="frame" x="0.0" y="44.666666666666671" width="423" height="14.333333333333336"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                         </label>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VUe-7P-QqT" userLabel="Divider">
-                            <rect key="frame" x="0.0" y="93" width="423" height="2"/>
+                            <rect key="frame" x="0.0" y="75" width="423" height="2"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="2" id="K5X-VW-zBq"/>
                             </constraints>
                         </view>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Flying out of anywhere" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="summaryLabel" userLabel="Summary Label">
-                            <rect key="frame" x="0.0" y="111" width="423" height="120"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Flying out of anywhere" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="summaryLabel" userLabel="Summary Label">
+                            <rect key="frame" x="0.0" y="93" width="423" height="120"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="120" id="I8c-i5-jqF"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
                         </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zqo-96-4vx" userLabel="Divider">
+                            <rect key="frame" x="0.0" y="229" width="423" height="2"/>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="2" id="K7n-FS-uKG"/>
+                            </constraints>
+                        </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="doneButton" userLabel="Ok Button">
                             <rect key="frame" x="0.0" y="247" width="423" height="48"/>
                             <constraints>

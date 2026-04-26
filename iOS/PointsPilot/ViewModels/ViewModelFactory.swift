@@ -108,7 +108,7 @@ final class ViewModelFactory {
 extension ViewModelFactory: TripBuilderSummaryViewModelFactory {
     func makeTripBuilderSummaryViewModel(
         title: String,
-        summary: String,
+        summary: NSAttributedString,
         instruction: String,
         buttonTitle: String
     ) -> any TripBuilderSummaryViewModelProtocol {

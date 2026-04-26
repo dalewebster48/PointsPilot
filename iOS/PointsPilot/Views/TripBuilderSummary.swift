@@ -25,7 +25,7 @@ final class TripBuilderSummary: UIView {
 
     func configure(viewModel: any TripBuilderSummaryViewModelProtocol) {
         titleLabel.text = viewModel.title
-        summaryLabel.text = viewModel.summary
+        summaryLabel.attributedText = viewModel.summary
         instructionLabel.text = viewModel.instruction
         doneButton.setTitle(viewModel.buttonTitle, for: .normal)
     }
@@ -66,10 +66,13 @@ final class TripBuilderSummary: UIView {
         self.contentView = contentView
         
         // custom spacing
-        labelStackView.setCustomSpacing(8, after: firstDivider)
-        labelStackView.setCustomSpacing(8, after: instructionLabel)
-        labelStackView.setCustomSpacing(24, after: summaryLabel)
+        labelStackView.setCustomSpacing(4, after: titleLabel)
+//        labelStackView.setCustomSpacing(48, after: secondDivider)
+//        labelStackView.setCustomSpacing(48, after: summaryLabel)
 
+//        firstDivider.isHidden = true
+//        secondDivider.isHidden = true
+        
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOpacity = 0.6
         layer.shadowOffset = CGSize(width: 0, height: 4)

@@ -2,7 +2,7 @@ import Foundation
 
 protocol TripBuilderSummaryViewModelProtocol {
     var title: String { get }
-    var summary: String { get }
+    var summary: NSAttributedString { get }
     var instruction: String { get }
     var buttonTitle: String { get }
 }
@@ -10,7 +10,7 @@ protocol TripBuilderSummaryViewModelProtocol {
 protocol TripBuilderSummaryViewModelFactory: AnyObject {
     func makeTripBuilderSummaryViewModel(
         title: String,
-        summary: String,
+        summary: NSAttributedString,
         instruction: String,
         buttonTitle: String
     ) -> any TripBuilderSummaryViewModelProtocol
@@ -18,7 +18,7 @@ protocol TripBuilderSummaryViewModelFactory: AnyObject {
 
 struct TripBuilderSummaryViewModel: TripBuilderSummaryViewModelProtocol {
     let title: String
-    let summary: String
+    let summary: NSAttributedString
     let instruction: String
     let buttonTitle: String
 }

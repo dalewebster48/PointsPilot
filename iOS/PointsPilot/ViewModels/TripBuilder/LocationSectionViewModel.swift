@@ -18,7 +18,7 @@ final class LocationSectionViewModel: TripBuilderSectionViewModel {
             for: mode,
             countries: selectedCountries,
             airports: selectedAirports
-        )
+        ).string
     }
 
     init(

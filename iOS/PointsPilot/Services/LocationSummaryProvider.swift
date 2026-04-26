@@ -1,11 +1,11 @@
-import Foundation
+import UIKit
 
 protocol LocationSummaryProvider: AnyObject {
     func summary(
         for mode: TripBuilderLocationPickerMode,
         countries: [String],
         airports: [Airport]
-    ) -> String
+    ) -> NSAttributedString
 }
 
 final class LocationSummaryProviderImpl: LocationSummaryProvider {
@@ -13,7 +13,7 @@ final class LocationSummaryProviderImpl: LocationSummaryProvider {
         for mode: TripBuilderLocationPickerMode,
         countries: [String],
         airports: [Airport]
-    ) -> String {
+    ) -> NSAttributedString {
         let displayedCountries: [String]
         if airports.isEmpty {
             displayedCountries = countries.sorted()
@@ -21,39 +21,68 @@ final class LocationSummaryProviderImpl: LocationSummaryProvider {
             displayedCountries = Array(Set(airports.map { $0.country })).sorted()
         }
 
-        let leadIn: String
-        switch mode {
-        case .origin: leadIn = "Flying out of"
-        case .destination: leadIn = "Flying to"
-        }
+        let result = NSMutableAttributedString()
 
         if airports.isEmpty {
             if displayedCountries.isEmpty {
-                return "\(leadIn) anywhere"
+                switch mode {
+                case .origin: result.append(plain("Flying out of anywhere"))
+                case .destination: result.append(plain("Flying to anywhere"))
+                }
+                return result
             }
-            let countryList = formatList(displayedCountries)
             switch mode {
-            case .origin: return "Flying out of anywhere from \(countryList)"
-            case .destination: return "Flying to anywhere in \(countryList)"
+            case .origin:
+                result.append(plain("Flying out of "))
+                result.append(formatList(displayedCountries))
+                result.append(plain(" from anywhere"))
+            case .destination:
+                result.append(plain("Flying to anywhere in "))
+                result.append(formatList(displayedCountries))
             }
+            return result
         }
 
-        let airportList = formatList(airports.map { $0.code })
-        let countryList = formatList(displayedCountries)
         switch mode {
-        case .origin: return "Flying out of \(countryList) from \(airportList)"
-        case .destination: return "Flying to \(countryList) arriving at \(airportList)"
+        case .origin:
+            result.append(plain("Flying out of "))
+            result.append(formatList(displayedCountries))
+            result.append(plain(" from "))
+            result.append(formatList(airports.map { $0.code }))
+        case .destination:
+            result.append(plain("Flying to "))
+            result.append(formatList(displayedCountries))
+            result.append(plain(" arriving at "))
+            result.append(formatList(airports.map { $0.code }))
         }
+        return result
     }
 
-    private func formatList(_ items: [String]) -> String {
-        switch items.count {
-        case 0: return ""
-        case 1: return items[0]
-        case 2: return "\(items[0]) or \(items[1])"
-        default:
-            let head = items.dropLast().joined(separator: ", ")
-            return "\(head) or \(items.last!)"
+    private func plain(_ string: String) -> NSAttributedString {
+        NSAttributedString(string: string)
+    }
+
+    private func underlined(_ string: String) -> NSAttributedString {
+        NSAttributedString(
+            string: string,
+            attributes: [
+                .underlineStyle: NSUnderlineStyle.single.rawValue,
+                .underlineColor: Theme.primaryAccent,
+                .foregroundColor: Theme.primaryAccent
+            ]
+        )
+    }
+
+    private func formatList(_ items: [String]) -> NSAttributedString {
+        let result = NSMutableAttributedString()
+        for (index, item) in items.enumerated() {
+            if index == items.count - 1, index > 0 {
+                result.append(plain(" or "))
+            } else if index > 0 {
+                result.append(plain(", "))
+            }
+            result.append(underlined(item))
         }
+        return result
     }
 }
