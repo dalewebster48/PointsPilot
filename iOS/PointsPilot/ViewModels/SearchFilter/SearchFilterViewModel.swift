@@ -90,8 +90,8 @@ final class SearchFilterViewModel: SearchFilterViewModelProtocol {
         let filter = FlightSearchFilter(
             origins: originAirport.map { [$0.code] },
             destinations: destinationAirport.map { [$0.code] },
-            dateFrom: dateFrom.map { Self.dateFormatter.string(from: $0) },
-            dateTo: dateTo.map { Self.dateFormatter.string(from: $0) },
+            dateFrom: dateFrom.map { DateFormatter.yearMonthDay.string(from: $0) },
+            dateTo: dateTo.map { DateFormatter.yearMonthDay.string(from: $0) },
             economyCostMin: economyCostMin,
             economyCostMax: economyCostMax,
             economyDeal: economyDealOnly ? true : nil,
@@ -127,13 +127,6 @@ final class SearchFilterViewModel: SearchFilterViewModelProtocol {
             viewDelegate?.bind(viewModel: self)
         }
     }
-
-    private static let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        return formatter
-    }()
 }
 
 // MARK: - AirportPickerDelegate

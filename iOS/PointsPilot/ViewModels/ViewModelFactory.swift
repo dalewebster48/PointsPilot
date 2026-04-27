@@ -79,12 +79,17 @@ final class ViewModelFactory {
         dateFrom: String?,
         dateTo: String?
     ) -> TripBuilderDatePickerViewModel {
-        TripBuilderDatePickerViewModel(
+        let initialRange = DayRange(
+            startDate: dateFrom.flatMap { DateFormatter.yearMonthDay.date(from: $0) },
+            endDate: dateTo.flatMap { DateFormatter.yearMonthDay.date(from: $0) }
+        )
+        return TripBuilderDatePickerViewModel(
             navigator: navigator,
             summaryFactory: self,
+            inputFactory: self,
+            summaryProvider: DateSummaryProviderImpl(),
             pickerDelegate: delegate,
-            dateFrom: dateFrom,
-            dateTo: dateTo
+            initialRange: initialRange
         )
     }
 
@@ -122,6 +127,40 @@ extension ViewModelFactory: TripBuilderSummaryViewModelFactory {
     }
 }
 
+// MARK: - DatePickerInputViewModelFactory
+
+extension ViewModelFactory: DatePickerInputViewModelFactory {
+    func makeMonthGridInputViewModel(
+        parentDelegate: any DatePickerPanelDelegate,
+        initialRange: DayRange
+    ) -> any MonthGridInputViewModelProtocol {
+        MonthGridInputViewModel(
+            parentDelegate: parentDelegate,
+            initialRange: initialRange
+        )
+    }
+
+    func makeRangeSliderInputViewModel(
+        parentDelegate: any DatePickerPanelDelegate,
+        initialRange: DayRange
+    ) -> any RangeSliderInputViewModelProtocol {
+        RangeSliderInputViewModel(
+            parentDelegate: parentDelegate,
+            initialRange: initialRange
+        )
+    }
+
+    func makeCalendarInputViewModel(
+        parentDelegate: any DatePickerPanelDelegate,
+        initialRange: DayRange
+    ) -> any CalendarInputViewModelProtocol {
+        CalendarInputViewModel(
+            parentDelegate: parentDelegate,
+            initialRange: initialRange
+        )
+    }
+}
+
 // MARK: - TripBuilderSectionViewModelFactory
 
 extension ViewModelFactory: TripBuilderSectionViewModelFactory {
@@ -142,6 +181,7 @@ extension ViewModelFactory: TripBuilderSectionViewModelFactory {
     ) -> any TripBuilderSectionViewModel {
         DateSectionViewModel(
             navigator: navigator,
+            summaryProvider: DateSummaryProviderImpl(),
             pickerDelegate: pickerDelegate
         )
     }

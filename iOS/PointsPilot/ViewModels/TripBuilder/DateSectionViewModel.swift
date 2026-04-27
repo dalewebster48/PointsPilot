@@ -2,6 +2,7 @@ import Foundation
 
 final class DateSectionViewModel: TripBuilderSectionViewModel {
     private let navigator: any Navigator
+    private let summaryProvider: any DateSummaryProvider
     private weak var pickerDelegate: (any TripBuilderDatePickerDelegate)?
 
     let iconName = "calendar"
@@ -12,23 +13,19 @@ final class DateSectionViewModel: TripBuilderSectionViewModel {
     private var dateTo: String?
 
     var summary: String {
-        switch (dateFrom, dateTo) {
-        case let (from?, to?):
-            return "\(from) – \(to)"
-        case let (from?, nil):
-            return "From \(from)"
-        case let (nil, to?):
-            return "Until \(to)"
-        case (nil, nil):
-            return ""
-        }
+        summaryProvider.summary(
+            from: dateFrom.flatMap { DateFormatter.yearMonthDay.date(from: $0) },
+            to: dateTo.flatMap { DateFormatter.yearMonthDay.date(from: $0) }
+        ).string
     }
 
     init(
         navigator: any Navigator,
+        summaryProvider: any DateSummaryProvider,
         pickerDelegate: any TripBuilderDatePickerDelegate
     ) {
         self.navigator = navigator
+        self.summaryProvider = summaryProvider
         self.pickerDelegate = pickerDelegate
     }
 

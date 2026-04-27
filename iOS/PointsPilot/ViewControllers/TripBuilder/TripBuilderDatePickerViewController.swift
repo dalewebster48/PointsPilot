@@ -1,20 +1,16 @@
 import UIKit
 
 final class TripBuilderDatePickerViewController: UIViewController {
-    @IBOutlet private weak var modeSegmentedControl: UISegmentedControl!
-    @IBOutlet private weak var specificDatesContainer: UIView!
-    @IBOutlet private weak var byMonthContainer: UIView!
-    @IBOutlet private weak var flexibleRangeContainer: UIView!
-    @IBOutlet private weak var dateFromPicker: UIDatePicker!
-    @IBOutlet private weak var dateToPicker: UIDatePicker!
-    @IBOutlet private weak var monthsCollectionView: UICollectionView!
-    @IBOutlet private weak var rangeSlider: RangeSlider!
-    @IBOutlet private weak var rangeLabel: UILabel!
+    @IBOutlet private weak var collectionView: UICollectionView!
     @IBOutlet private weak var summaryBanner: TripBuilderSummary!
 
     private let viewModel: any TripBuilderDatePickerViewModelProtocol
+    private let pageDotsView = PageDotsView(dotCount: DatePickerPanel.allCases.count)
+    private let panels: [DatePickerPanel] = DatePickerPanel.allCases
 
-    private let monthNames = Calendar.current.shortMonthSymbols
+    private lazy var panelViews: [UIView] = panels.map(makePanelView(for:))
+
+    private var lastReportedPanel: DatePickerPanel = .months
 
     init(viewModel: any TripBuilderDatePickerViewModelProtocol) {
         self.viewModel = viewModel
@@ -29,129 +25,131 @@ final class TripBuilderDatePickerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "When?"
-        summaryBanner.onDone = { [weak self] in
-            self?.viewModel.didTapDone()
-        }
-
-        let pillNib = UINib(nibName: "SelectablePillCell", bundle: nil)
-        monthsCollectionView.register(pillNib, forCellWithReuseIdentifier: SelectablePillCell.reuseIdentifier)
-        monthsCollectionView.allowsMultipleSelection = true
-        monthsCollectionView.dataSource = self
-        monthsCollectionView.delegate = self
-
-        if let layout = monthsCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-            layout.minimumInteritemSpacing = 8
-            layout.minimumLineSpacing = 8
-        }
-
-        dateFromPicker.datePickerMode = .date
-        dateToPicker.datePickerMode = .date
-
-        rangeSlider.minimumValue = 0
-        rangeSlider.maximumValue = Double(Self.maxDaysOut)
-        rangeSlider.lowerValue = 0
-        rangeSlider.upperValue = Double(Self.maxDaysOut)
-        
         applyTheme()
+        setupCollectionView()
+        setupPageDots()
+        summaryBanner.onDone = { [weak self] in self?.viewModel.didTapDone() }
         viewModel.viewDelegate = self
-    }
-
-    @IBAction private func modeChanged(_ sender: UISegmentedControl) {
-        guard let mode = DatePickerMode(rawValue: sender.selectedSegmentIndex) else { return }
-        viewModel.didSelectMode(mode)
-    }
-
-    @IBAction private func dateFromChanged(_ sender: UIDatePicker) {
-        viewModel.didChangeDateFrom(sender.date)
-    }
-
-    @IBAction private func dateToChanged(_ sender: UIDatePicker) {
-        viewModel.didChangeDateTo(sender.date)
-    }
-
-    @IBAction private func rangeSliderChanged(_ sender: RangeSlider) {
-        let startDate = Self.date(daysFromToday: Int(sender.lowerValue.rounded()))
-        let endDate = Self.date(daysFromToday: Int(sender.upperValue.rounded()))
-        viewModel.didChangeRangeStart(startDate)
-        viewModel.didChangeRangeEnd(endDate)
-        updateRangeLabel(start: startDate, end: endDate)
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let desired = summaryBanner.bounds.height + 12
-        if abs(monthsCollectionView.contentInset.bottom - desired) > 0.5 {
-            monthsCollectionView.contentInset.bottom = desired
-            monthsCollectionView.verticalScrollIndicatorInsets.bottom = desired
+        let bannerInset = summaryBanner.bounds.height + 12
+        if abs(collectionView.contentInset.bottom - bannerInset) > 0.5 {
+            collectionView.contentInset.bottom = bannerInset
+            collectionView.verticalScrollIndicatorInsets.bottom = bannerInset
         }
     }
 
     private func applyTheme() {
         view.backgroundColor = Theme.background
-        monthsCollectionView.backgroundColor = Theme.background
+        collectionView.backgroundColor = Theme.background
     }
 
-    private func updateContainerVisibility(for mode: DatePickerMode) {
-        specificDatesContainer.isHidden = mode != .specificDates
-        byMonthContainer.isHidden = mode != .byMonth
-        flexibleRangeContainer.isHidden = mode != .flexibleRange
+    private func setupCollectionView() {
+        collectionView.register(
+            DatePickerPanelCell.self,
+            forCellWithReuseIdentifier: DatePickerPanelCell.reuseIdentifier
+        )
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.decelerationRate = .fast
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.alwaysBounceVertical = true
     }
 
-    private func updateRangeLabel(start: Date, end: Date) {
-        rangeLabel.text = "\(Self.displayFormatter.string(from: start)) – \(Self.displayFormatter.string(from: end))"
+    private func setupPageDots() {
+        pageDotsView.translatesAutoresizingMaskIntoConstraints = false
+        pageDotsView.onTap = { [weak self] index in
+            self?.scrollToPanel(at: index, animated: true)
+        }
+        view.addSubview(pageDotsView)
+        NSLayoutConstraint.activate([
+            pageDotsView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
+            pageDotsView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80)
+        ])
     }
 
-    private static let maxDaysOut = 364
-
-    private static let calendar = Calendar.current
-
-    private static var today: Date {
-        calendar.startOfDay(for: Date())
+    private func makePanelView(for panel: DatePickerPanel) -> UIView {
+        switch panel {
+        case .months:
+            let view = MonthGridInputView()
+            view.configure(viewModel: viewModel.monthInputViewModel)
+            return view
+        case .range:
+            let view = RangeSliderInputView()
+            view.configure(viewModel: viewModel.rangeInputViewModel)
+            return view
+        case .calendar:
+            let view = CalendarInputView()
+            view.configure(viewModel: viewModel.calendarInputViewModel)
+            return view
+        }
     }
 
-    private static func date(daysFromToday days: Int) -> Date {
-        calendar.date(byAdding: .day, value: days, to: today) ?? today
+    private func title(for panel: DatePickerPanel) -> String {
+        switch panel {
+        case .months: return "Be vague"
+        case .range: return "Be flexible"
+        case .calendar: return "Be specific"
+        }
     }
 
-    private static func days(from date: Date) -> Int {
-        calendar.dateComponents([.day], from: today, to: calendar.startOfDay(for: date)).day ?? 0
+    private func panelOffsets() -> [CGFloat] {
+        (0..<panels.count).compactMap { index in
+            collectionView
+                .layoutAttributesForItem(at: IndexPath(item: index, section: 0))?
+                .frame
+                .origin
+                .y
+        }
     }
 
-    private static let displayFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .none
-        return formatter
-    }()
+    private func scrollToPanel(at index: Int, animated: Bool) {
+        let offsets = panelOffsets()
+        guard index < offsets.count else { return }
+        collectionView.setContentOffset(CGPoint(x: 0, y: offsets[index]), animated: animated)
+    }
+
+    private func updateFocus(for currentY: CGFloat) {
+        let offsets = panelOffsets()
+        guard !offsets.isEmpty else { return }
+
+        // Use the cell height as the fade reference, so the next panel reaches
+        // the dim floor right as it disappears off the top of the screen.
+        let pageHeight = max(collectionView.bounds.height, 1)
+
+        var bestDistance = CGFloat.infinity
+        var activeIndex = 0
+        for (index, offset) in offsets.enumerated() {
+            let distance = abs(offset - currentY)
+            let normalised = min(distance / pageHeight, 1)
+            let alpha = 0.28 + 0.72 * (1 - normalised)
+            if let cell = collectionView.cellForItem(at: IndexPath(item: index, section: 0)) as? DatePickerPanelCell {
+                cell.setFocusOpacity(alpha)
+            }
+            if distance < bestDistance {
+                bestDistance = distance
+                activeIndex = index
+            }
+        }
+
+        let activePanel = panels[activeIndex]
+        if activePanel != lastReportedPanel {
+            lastReportedPanel = activePanel
+            viewModel.didChangeFocusedPanel(activePanel)
+            pageDotsView.activeIndex = activeIndex
+        }
+    }
 }
 
 // MARK: - TripBuilderDatePickerViewModelViewDelegate
 
 extension TripBuilderDatePickerViewController: TripBuilderDatePickerViewModelViewDelegate {
     func bind(viewModel: any TripBuilderDatePickerViewModelProtocol) {
-        modeSegmentedControl.selectedSegmentIndex = viewModel.mode.rawValue
-        updateContainerVisibility(for: viewModel.mode)
         summaryBanner.configure(viewModel: viewModel.summaryViewModel)
+        pageDotsView.activeIndex = viewModel.focusedPanel.rawValue
         view.setNeedsLayout()
-
-        if let date = viewModel.dateFrom { dateFromPicker.date = date }
-        if let date = viewModel.dateTo { dateToPicker.date = date }
-
-        let lowerDays = viewModel.rangeStartDate.map { Self.days(from: $0) } ?? 0
-        let upperDays = viewModel.rangeEndDate.map { Self.days(from: $0) } ?? Self.maxDaysOut
-        rangeSlider.lowerValue = Double(max(0, min(Self.maxDaysOut, lowerDays)))
-        rangeSlider.upperValue = Double(max(0, min(Self.maxDaysOut, upperDays)))
-        updateRangeLabel(
-            start: Self.date(daysFromToday: Int(rangeSlider.lowerValue.rounded())),
-            end: Self.date(daysFromToday: Int(rangeSlider.upperValue.rounded()))
-        )
-
-        monthsCollectionView.reloadData()
-        for month in viewModel.selectedMonths {
-            let indexPath = IndexPath(item: month - 1, section: 0)
-            monthsCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
-        }
     }
 }
 
@@ -162,7 +160,7 @@ extension TripBuilderDatePickerViewController: UICollectionViewDataSource {
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
     ) -> Int {
-        12
+        panels.count
     }
 
     func collectionView(
@@ -170,28 +168,77 @@ extension TripBuilderDatePickerViewController: UICollectionViewDataSource {
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: SelectablePillCell.reuseIdentifier,
+            withReuseIdentifier: DatePickerPanelCell.reuseIdentifier,
             for: indexPath
-        ) as! SelectablePillCell
-        cell.configure(title: monthNames[indexPath.item])
+        ) as! DatePickerPanelCell
+        let panel = panels[indexPath.item]
+        cell.embed(panelView: panelViews[indexPath.item], title: title(for: panel))
         return cell
     }
 }
 
-// MARK: - UICollectionViewDelegate
+// MARK: - UICollectionViewDelegateFlowLayout
 
-extension TripBuilderDatePickerViewController: UICollectionViewDelegate {
+extension TripBuilderDatePickerViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(
         _ collectionView: UICollectionView,
-        didSelectItemAt indexPath: IndexPath
-    ) {
-        viewModel.didToggleMonth(indexPath.item + 1)
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+        let availableWidth = collectionView.bounds.width
+        let horizontalInset: CGFloat = 40 // 20 left + 20 right (cell.embed padding)
+        let panelView = panelViews[indexPath.item]
+        let measuredHeight = panelView.systemLayoutSizeFitting(
+            CGSize(width: max(availableWidth - horizontalInset, 1), height: 0),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        ).height
+        let titleHeight: CGFloat = 40
+        let titleToPanelSpacing: CGFloat = 16
+        return CGSize(width: availableWidth, height: titleHeight + titleToPanelSpacing + measuredHeight)
+    }
+}
+
+// MARK: - UIScrollViewDelegate (custom snap + fade)
+
+extension TripBuilderDatePickerViewController {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        updateFocus(for: scrollView.contentOffset.y)
     }
 
-    func collectionView(
-        _ collectionView: UICollectionView,
-        didDeselectItemAt indexPath: IndexPath
+    func scrollViewWillEndDragging(
+        _ scrollView: UIScrollView,
+        withVelocity velocity: CGPoint,
+        targetContentOffset: UnsafeMutablePointer<CGPoint>
     ) {
-        viewModel.didToggleMonth(indexPath.item + 1)
+        let offsets = panelOffsets()
+        guard !offsets.isEmpty else { return }
+        let proposedY = targetContentOffset.pointee.y
+
+        // Pick the nearest panel anchor by default…
+        var nearestIndex = 0
+        var nearestDistance = CGFloat.infinity
+        for (index, offset) in offsets.enumerated() {
+            let distance = abs(offset - proposedY)
+            if distance < nearestDistance {
+                nearestDistance = distance
+                nearestIndex = index
+            }
+        }
+
+        // …then nudge in the velocity direction if the user flicked decisively
+        // and the next/previous anchor is reachable.
+        let velocityThreshold: CGFloat = 0.3
+        if velocity.y > velocityThreshold,
+           nearestIndex < offsets.count - 1,
+           proposedY < offsets[nearestIndex + 1] {
+            nearestIndex += 1
+        } else if velocity.y < -velocityThreshold,
+                  nearestIndex > 0,
+                  proposedY > offsets[nearestIndex - 1] {
+            nearestIndex -= 1
+        }
+
+        targetContentOffset.pointee.y = offsets[nearestIndex]
     }
 }

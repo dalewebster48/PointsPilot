@@ -1,11 +1,5 @@
 import Foundation
 
-enum DatePickerMode: Int {
-    case specificDates = 0
-    case byMonth = 1
-    case flexibleRange = 2
-}
-
 protocol TripBuilderDatePickerDelegate: AnyObject {
     func didUpdateDateSelection(
         dateFrom: String?,
@@ -14,22 +8,16 @@ protocol TripBuilderDatePickerDelegate: AnyObject {
 }
 
 protocol TripBuilderDatePickerViewModelProtocol: AnyObject {
-    var mode: DatePickerMode { get }
-    var dateFrom: Date? { get }
-    var dateTo: Date? { get }
-    var selectedMonths: Set<Int> { get }
-    var rangeStartDate: Date? { get }
-    var rangeEndDate: Date? { get }
+    var range: DayRange { get }
+    var focusedPanel: DatePickerPanel { get }
     var summaryViewModel: any TripBuilderSummaryViewModelProtocol { get }
+    var monthInputViewModel: any MonthGridInputViewModelProtocol { get }
+    var rangeInputViewModel: any RangeSliderInputViewModelProtocol { get }
+    var calendarInputViewModel: any CalendarInputViewModelProtocol { get }
 
     var viewDelegate: (any TripBuilderDatePickerViewModelViewDelegate)? { get set }
 
-    func didSelectMode(_ mode: DatePickerMode)
-    func didChangeDateFrom(_ date: Date)
-    func didChangeDateTo(_ date: Date)
-    func didToggleMonth(_ month: Int)
-    func didChangeRangeStart(_ date: Date)
-    func didChangeRangeEnd(_ date: Date)
+    func didChangeFocusedPanel(_ panel: DatePickerPanel)
     func didTapDone()
 }
 
@@ -38,28 +26,35 @@ protocol TripBuilderDatePickerViewModelViewDelegate: AnyObject {
 }
 
 final class TripBuilderDatePickerViewModel: TripBuilderDatePickerViewModelProtocol {
-    private weak var pickerDelegate: (any TripBuilderDatePickerDelegate)?
-    private let navigator: Navigator
+    private let navigator: any Navigator
     private let summaryFactory: any TripBuilderSummaryViewModelFactory
+    private let inputFactory: any DatePickerInputViewModelFactory
+    private let summaryProvider: any DateSummaryProvider
+    private weak var pickerDelegate: (any TripBuilderDatePickerDelegate)?
 
-    var mode: DatePickerMode = .specificDates { didSet { bind() } }
-    var dateFrom: Date? { didSet { bind() } }
-    var dateTo: Date? { didSet { bind() } }
-    var selectedMonths: Set<Int> = [] { didSet { bind() } }
-    var rangeStartDate: Date? { didSet { bind() } }
-    var rangeEndDate: Date? { didSet { bind() } }
+    private(set) var range: DayRange { didSet { bind() } }
+    private(set) var focusedPanel: DatePickerPanel = .months { didSet { bind() } }
+
+    lazy var monthInputViewModel: any MonthGridInputViewModelProtocol = inputFactory.makeMonthGridInputViewModel(
+        parentDelegate: self,
+        initialRange: range
+    )
+
+    lazy var rangeInputViewModel: any RangeSliderInputViewModelProtocol = inputFactory.makeRangeSliderInputViewModel(
+        parentDelegate: self,
+        initialRange: range
+    )
+
+    lazy var calendarInputViewModel: any CalendarInputViewModelProtocol = inputFactory.makeCalendarInputViewModel(
+        parentDelegate: self,
+        initialRange: range
+    )
 
     var summaryViewModel: any TripBuilderSummaryViewModelProtocol {
-        let instruction: String
-        switch mode {
-        case .specificDates: instruction = "Pick a departure and a return date"
-        case .byMonth: instruction = "Pick the months you can travel in"
-        case .flexibleRange: instruction = "Pick the earliest and latest dates you'd travel"
-        }
-        return summaryFactory.makeTripBuilderSummaryViewModel(
+        summaryFactory.makeTripBuilderSummaryViewModel(
             title: "When are you travelling?",
-            summary: NSAttributedString(),
-            instruction: instruction,
+            summary: summaryProvider.summary(from: range.startDate, to: range.endDate),
+            instruction: instruction(for: focusedPanel),
             buttonTitle: "Ok"
         )
     }
@@ -69,86 +64,40 @@ final class TripBuilderDatePickerViewModel: TripBuilderDatePickerViewModelProtoc
     }
 
     init(
-        navigator: Navigator,
+        navigator: any Navigator,
         summaryFactory: any TripBuilderSummaryViewModelFactory,
+        inputFactory: any DatePickerInputViewModelFactory,
+        summaryProvider: any DateSummaryProvider,
         pickerDelegate: any TripBuilderDatePickerDelegate,
-        dateFrom: String?,
-        dateTo: String?
+        initialRange: DayRange
     ) {
         self.navigator = navigator
         self.summaryFactory = summaryFactory
+        self.inputFactory = inputFactory
+        self.summaryProvider = summaryProvider
         self.pickerDelegate = pickerDelegate
-        self.dateFrom = dateFrom.flatMap { Self.dateFormatter.date(from: $0) }
-        self.dateTo = dateTo.flatMap { Self.dateFormatter.date(from: $0) }
+        self.range = initialRange
     }
 
-    func didSelectMode(_ mode: DatePickerMode) {
-        self.mode = mode
-    }
-
-    func didChangeDateFrom(_ date: Date) {
-        dateFrom = date
-    }
-
-    func didChangeDateTo(_ date: Date) {
-        dateTo = date
-    }
-
-    func didToggleMonth(_ month: Int) {
-        if selectedMonths.contains(month) {
-            selectedMonths.remove(month)
-        } else {
-            let proposed = selectedMonths.union([month])
-            if Self.isContinuous(proposed) {
-                selectedMonths = proposed
-            }
-        }
-    }
-
-    func didChangeRangeStart(_ date: Date) {
-        rangeStartDate = date
-    }
-
-    func didChangeRangeEnd(_ date: Date) {
-        rangeEndDate = date
+    func didChangeFocusedPanel(_ panel: DatePickerPanel) {
+        guard panel != focusedPanel else { return }
+        focusedPanel = panel
     }
 
     func didTapDone() {
-        let (from, to) = resolvedDates()
         pickerDelegate?.didUpdateDateSelection(
-            dateFrom: from.map { Self.dateFormatter.string(from: $0) },
-            dateTo: to.map { Self.dateFormatter.string(from: $0) }
+            dateFrom: range.startDate.map { DateFormatter.yearMonthDay.string(from: $0) },
+            dateTo: range.endDate.map { DateFormatter.yearMonthDay.string(from: $0) }
         )
-        
         navigator.dismiss()
     }
 
-    private func resolvedDates() -> (Date?, Date?) {
-        switch mode {
-        case .specificDates:
-            return (dateFrom, dateTo)
-        case .byMonth:
-            return Self.dateRangeFromMonths(selectedMonths)
-        case .flexibleRange:
-            return (rangeStartDate, rangeEndDate)
+    private func instruction(for panel: DatePickerPanel) -> String {
+        switch panel {
+        case .months: return "Pick months you might travel in"
+        case .range: return "Drag the handles to set a window"
+        case .calendar: return "Pick exact dates if you know them"
         }
-    }
-
-    private static func isContinuous(_ months: Set<Int>) -> Bool {
-        guard !months.isEmpty else { return true }
-        let sorted = months.sorted()
-        return sorted.last! - sorted.first! == sorted.count - 1
-    }
-
-    private static func dateRangeFromMonths(_ months: Set<Int>) -> (Date?, Date?) {
-        guard !months.isEmpty else { return (nil, nil) }
-        let sorted = months.sorted()
-        let year = Calendar.current.component(.year, from: Date())
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        let startDate = Calendar.current.date(from: DateComponents(year: year, month: sorted.first!, day: 1))
-        let endDate = Calendar.current.date(from: DateComponents(year: year, month: sorted.last! + 1, day: 0))
-        return (startDate, endDate)
     }
 
     private func bind() {
@@ -156,11 +105,22 @@ final class TripBuilderDatePickerViewModel: TripBuilderDatePickerViewModelProtoc
             viewDelegate?.bind(viewModel: self)
         }
     }
+}
 
-    private static let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        return formatter
-    }()
+// MARK: - DatePickerPanelDelegate
+
+extension TripBuilderDatePickerViewModel: DatePickerPanelDelegate {
+    func panel(
+        _ source: any DatePickerPanelViewModel,
+        didUpdate range: DayRange
+    ) {
+        guard range != self.range else { return }
+        self.range = range
+        // Push the new range into every other sub-VM so all panels stay in sync.
+        // The originating sub-VM already reflects this range, so skip it to
+        // avoid an unnecessary re-render and to break any feedback loops.
+        if source !== monthInputViewModel { monthInputViewModel.applyRange(range) }
+        if source !== rangeInputViewModel { rangeInputViewModel.applyRange(range) }
+        if source !== calendarInputViewModel { calendarInputViewModel.applyRange(range) }
+    }
 }
