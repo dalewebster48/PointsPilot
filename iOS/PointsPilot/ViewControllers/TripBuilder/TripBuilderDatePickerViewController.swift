@@ -53,9 +53,9 @@ final class TripBuilderDatePickerViewController: UIViewController {
         )
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.decelerationRate = .fast
         collectionView.showsVerticalScrollIndicator = false
         collectionView.alwaysBounceVertical = true
+        collectionView.decelerationRate = .fast
     }
 
     private func setupPageDots() {
@@ -115,16 +115,19 @@ final class TripBuilderDatePickerViewController: UIViewController {
         let offsets = panelOffsets()
         guard !offsets.isEmpty else { return }
 
-        // Use the cell height as the fade reference, so the next panel reaches
-        // the dim floor right as it disappears off the top of the screen.
-        let pageHeight = max(collectionView.bounds.height, 1)
+        // Tight fade range so panels visibly dim as soon as they drift out of
+        // focus, with a steep (squared) curve and a low floor for clear
+        // hierarchy between focused and unfocused panels.
+        let fadeRange: CGFloat = 220
+        let floor: CGFloat = 0.15
 
         var bestDistance = CGFloat.infinity
         var activeIndex = 0
         for (index, offset) in offsets.enumerated() {
             let distance = abs(offset - currentY)
-            let normalised = min(distance / pageHeight, 1)
-            let alpha = 0.28 + 0.72 * (1 - normalised)
+            let normalised = min(distance / fadeRange, 1)
+            let proximity = 1 - normalised
+            let alpha = floor + (1 - floor) * (proximity * proximity)
             if let cell = collectionView.cellForItem(at: IndexPath(item: index, section: 0)) as? DatePickerPanelCell {
                 cell.setFocusOpacity(alpha)
             }
@@ -199,46 +202,10 @@ extension TripBuilderDatePickerViewController: UICollectionViewDelegateFlowLayou
     }
 }
 
-// MARK: - UIScrollViewDelegate (custom snap + fade)
+// MARK: - UIScrollViewDelegate (fade only; snap lives in the layout)
 
 extension TripBuilderDatePickerViewController {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         updateFocus(for: scrollView.contentOffset.y)
-    }
-
-    func scrollViewWillEndDragging(
-        _ scrollView: UIScrollView,
-        withVelocity velocity: CGPoint,
-        targetContentOffset: UnsafeMutablePointer<CGPoint>
-    ) {
-        let offsets = panelOffsets()
-        guard !offsets.isEmpty else { return }
-        let proposedY = targetContentOffset.pointee.y
-
-        // Pick the nearest panel anchor by default…
-        var nearestIndex = 0
-        var nearestDistance = CGFloat.infinity
-        for (index, offset) in offsets.enumerated() {
-            let distance = abs(offset - proposedY)
-            if distance < nearestDistance {
-                nearestDistance = distance
-                nearestIndex = index
-            }
-        }
-
-        // …then nudge in the velocity direction if the user flicked decisively
-        // and the next/previous anchor is reachable.
-        let velocityThreshold: CGFloat = 0.3
-        if velocity.y > velocityThreshold,
-           nearestIndex < offsets.count - 1,
-           proposedY < offsets[nearestIndex + 1] {
-            nearestIndex += 1
-        } else if velocity.y < -velocityThreshold,
-                  nearestIndex > 0,
-                  proposedY > offsets[nearestIndex - 1] {
-            nearestIndex -= 1
-        }
-
-        targetContentOffset.pointee.y = offsets[nearestIndex]
     }
 }

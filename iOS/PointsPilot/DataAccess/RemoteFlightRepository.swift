@@ -20,8 +20,7 @@ final class RemoteFlightRepository: FlightRepository {
 // MARK: - URL Endpoints
 
 private extension URL {
-    static var serverBase: URL { URL(string: "http://localhost:4000")! }
-    static var flights: URL { serverBase.appending(path: "flights") }
+    static var flights: URL { base.appending(path: "flights") }
 }
 
 // MARK: - Request

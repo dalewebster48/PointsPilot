@@ -21,8 +21,7 @@ final class RemoteAirportRepository: AirportRepository {
 // MARK: - URL Endpoints
 
 private extension URL {
-    static var serverBase: URL { URL(string: "http://localhost:4000")! }
-    static var airports: URL { serverBase.appending(path: "airports") }
+    static var airports: URL { base.appending(path: "airports") }
 }
 
 // MARK: - Request
