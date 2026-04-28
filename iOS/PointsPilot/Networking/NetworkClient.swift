@@ -59,3 +59,8 @@ enum NetworkError: Error {
     case invalidURL
     case httpError(statusCode: Int)
 }
+
+extension URL {
+//    static var serverBase: URL { URL(string: "http://localhost:4000")! }
+    static var base: URL { ServerConfig.baseURL }
+}

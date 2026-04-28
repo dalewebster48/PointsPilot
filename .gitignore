@@ -10,6 +10,9 @@ dist/
 build/
 
 # === iOS (Client) ===
+## Local config (per-developer)
+ServerConfig.plist
+
 ## Build
 DerivedData/
 build/
