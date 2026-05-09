@@ -27,25 +27,25 @@
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="stack">
                     <rect key="frame" x="24" y="24" width="423" height="295"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="750" text="Where are you flying from?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="titleLabel" userLabel="Title Label">
-                            <rect key="frame" x="0.0" y="0.0" width="423" height="28.666666666666668"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="750" ambiguous="YES" text="Where are you flying from?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="titleLabel" userLabel="Title Label">
+                            <rect key="frame" x="0.0" y="0.0" width="423" height="128.66666666666666"/>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="24"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="750" text="Flying out of anywhere" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UfK-vj-4LH" userLabel="Instruction Label">
-                            <rect key="frame" x="0.0" y="44.666666666666671" width="423" height="14.333333333333336"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="750" ambiguous="YES" text="Flying out of anywhere" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UfK-vj-4LH" userLabel="Instruction Label">
+                            <rect key="frame" x="0.0" y="144.66666666666666" width="423" height="14.333333333333343"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                         </label>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VUe-7P-QqT" userLabel="Divider">
-                            <rect key="frame" x="0.0" y="75" width="423" height="2"/>
+                            <rect key="frame" x="0.0" y="175" width="423" height="2"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="2" id="K5X-VW-zBq"/>
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Flying out of anywhere" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="summaryLabel" userLabel="Summary Label">
-                            <rect key="frame" x="0.0" y="93" width="423" height="120"/>
+                            <rect key="frame" x="0.0" y="193" width="423" height="20"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="120" id="I8c-i5-jqF"/>
+                                <constraint firstAttribute="height" constant="20" id="I8c-i5-jqF"/>
                             </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                         </label>

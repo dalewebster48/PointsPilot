@@ -1,6 +1,7 @@
 import UIKit
 
 final class TripBuilderDatePickerViewController: UIViewController {
+
     @IBOutlet private weak var collectionView: UICollectionView!
     @IBOutlet private weak var summaryBanner: TripBuilderSummary!
 
@@ -34,7 +35,7 @@ final class TripBuilderDatePickerViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let bannerInset = summaryBanner.bounds.height + 12
+        let bannerInset = summaryBanner.bounds.height + 48
         if abs(collectionView.contentInset.bottom - bannerInset) > 0.5 {
             collectionView.contentInset.bottom = bannerInset
             collectionView.verticalScrollIndicatorInsets.bottom = bannerInset
@@ -110,40 +111,6 @@ final class TripBuilderDatePickerViewController: UIViewController {
         guard index < offsets.count else { return }
         collectionView.setContentOffset(CGPoint(x: 0, y: offsets[index]), animated: animated)
     }
-
-    private func updateFocus(for currentY: CGFloat) {
-        let offsets = panelOffsets()
-        guard !offsets.isEmpty else { return }
-
-        // Tight fade range so panels visibly dim as soon as they drift out of
-        // focus, with a steep (squared) curve and a low floor for clear
-        // hierarchy between focused and unfocused panels.
-        let fadeRange: CGFloat = 220
-        let floor: CGFloat = 0.15
-
-        var bestDistance = CGFloat.infinity
-        var activeIndex = 0
-        for (index, offset) in offsets.enumerated() {
-            let distance = abs(offset - currentY)
-            let normalised = min(distance / fadeRange, 1)
-            let proximity = 1 - normalised
-            let alpha = floor + (1 - floor) * (proximity * proximity)
-            if let cell = collectionView.cellForItem(at: IndexPath(item: index, section: 0)) as? DatePickerPanelCell {
-                cell.setFocusOpacity(alpha)
-            }
-            if distance < bestDistance {
-                bestDistance = distance
-                activeIndex = index
-            }
-        }
-
-        let activePanel = panels[activeIndex]
-        if activePanel != lastReportedPanel {
-            lastReportedPanel = activePanel
-            viewModel.didChangeFocusedPanel(activePanel)
-            pageDotsView.activeIndex = activeIndex
-        }
-    }
 }
 
 // MARK: - TripBuilderDatePickerViewModelViewDelegate
@@ -199,13 +166,5 @@ extension TripBuilderDatePickerViewController: UICollectionViewDelegateFlowLayou
         let titleHeight: CGFloat = 40
         let titleToPanelSpacing: CGFloat = 16
         return CGSize(width: availableWidth, height: titleHeight + titleToPanelSpacing + measuredHeight)
-    }
-}
-
-// MARK: - UIScrollViewDelegate (fade only; snap lives in the layout)
-
-extension TripBuilderDatePickerViewController {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        updateFocus(for: scrollView.contentOffset.y)
     }
 }

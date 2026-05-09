@@ -38,10 +38,6 @@ final class DatePickerPanelCell: UICollectionViewCell {
         }
     }
 
-    func setFocusOpacity(_ alpha: CGFloat) {
-        stack.alpha = alpha
-    }
-
     private func commonInit() {
         backgroundColor = .clear
         contentView.backgroundColor = .clear

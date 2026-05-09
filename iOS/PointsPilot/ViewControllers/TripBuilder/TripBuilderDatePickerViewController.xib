@@ -1,45 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TripBuilderDatePickerViewController" customModule="PointsPilot" customModuleProvider="target">
             <connections>
-                <outlet property="view" destination="root" id="ov"/>
                 <outlet property="collectionView" destination="cv" id="o1"/>
                 <outlet property="summaryBanner" destination="banner" id="o2"/>
+                <outlet property="view" destination="root" id="ov"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="root">
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-            <viewLayoutGuide key="safeArea" id="rootSafe"/>
             <subviews>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="cv">
-                    <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="24" minimumInteritemSpacing="0" id="cvfl" customClass="DatePickerSnapFlowLayout" customModule="PointsPilot" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="118" width="393" height="734"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="24" minimumInteritemSpacing="0.0" id="cvfl" customClass="VerticallySnappingFlowLayout" customModule="PointsPilot" customModuleProvider="target">
                         <size key="itemSize" width="393" height="200"/>
                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
                         <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                     </collectionViewFlowLayout>
                 </collectionView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="banner" customClass="TripBuilderSummary" customModule="PointsPilot" customModuleProvider="target">
+                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="banner" customClass="TripBuilderSummary" customModule="PointsPilot" customModuleProvider="target">
                     <rect key="frame" x="16" y="744" width="361" height="84"/>
                 </view>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="rootSafe"/>
             <constraints>
+                <constraint firstItem="banner" firstAttribute="leading" secondItem="root" secondAttribute="leading" constant="16" id="b1"/>
+                <constraint firstAttribute="trailing" secondItem="banner" secondAttribute="trailing" constant="16" id="b2"/>
+                <constraint firstItem="rootSafe" firstAttribute="bottom" secondItem="banner" secondAttribute="bottom" constant="12" id="b3"/>
                 <constraint firstItem="cv" firstAttribute="leading" secondItem="root" secondAttribute="leading" id="c1"/>
                 <constraint firstAttribute="trailing" secondItem="cv" secondAttribute="trailing" id="c2"/>
                 <constraint firstItem="cv" firstAttribute="top" secondItem="rootSafe" secondAttribute="top" id="c3"/>
                 <constraint firstAttribute="bottom" secondItem="cv" secondAttribute="bottom" id="c4"/>
-                <constraint firstItem="banner" firstAttribute="leading" secondItem="root" secondAttribute="leading" constant="16" id="b1"/>
-                <constraint firstAttribute="trailing" secondItem="banner" secondAttribute="trailing" constant="16" id="b2"/>
-                <constraint firstItem="rootSafe" firstAttribute="bottom" secondItem="banner" secondAttribute="bottom" constant="12" id="b3"/>
             </constraints>
+            <point key="canvasLocation" x="139" y="154"/>
         </view>
     </objects>
 </document>
