@@ -75,7 +75,6 @@ final class VerticallySnappingFlowLayout: UICollectionViewFlowLayout {
             let startedAtTop = startingPoint.y == currentAttrs.frame.origin.y
             let startedAtBottom = startingPoint.y == absPanelBottom.y
             if startedAtTop {
-                print("Dale started from top")
                 // We started at the top
                 if relPanelOrigin.y > Self.SNAP_THRESHOLD && prevAttrs != nil {
                     // User is scrolling up, snap back
@@ -92,7 +91,6 @@ final class VerticallySnappingFlowLayout: UICollectionViewFlowLayout {
                     return startingPoint
                 }
             } else if startedAtBottom {
-                print("Dale started from bottom")
                 if relPanelBottom.y > (collectionView.frame.height + Self.SNAP_THRESHOLD) && nextAttrs != nil {
                     // User is scrolling down
                     currentCell += 1
@@ -108,16 +106,13 @@ final class VerticallySnappingFlowLayout: UICollectionViewFlowLayout {
                     return startingPoint
                 }
             } else {
-                print("Dale free scroll", relPanelOrigin.y, currentAttrs.frame.origin.y - currentContentOffset.y)
                 // This is a standard free scroll with snapping when scrolling beyond the bounds
                 if relPanelOrigin.y > 0 {
                     // Snap to the top of the panel
-                    print("Dale freescroll snap to top")
                     startingPoint = currentAttrs.frame.origin
                     return startingPoint
                 } else if relPanelBottom.y < (collectionView.frame.height - collectionView.contentInset.bottom) {
                     // Snap to the bottom
-                    print("Dale freescroll snap to bottom")
                     startingPoint = absPanelBottom
                     return startingPoint
                 } else {
@@ -129,5 +124,17 @@ final class VerticallySnappingFlowLayout: UICollectionViewFlowLayout {
     
     override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
         suggestedContentOffset(for: proposedContentOffset)
+    }
+    
+    override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
+        true
+    }
+    
+    override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+        super.layoutAttributesForElements(in: rect)?.enumerated().map { index, originalAttrs in
+            let attrs = originalAttrs.copy() as! UICollectionViewLayoutAttributes
+            attrs.alpha = index == currentCell ? 1 : 0.5
+            return attrs
+        }
     }
 }
