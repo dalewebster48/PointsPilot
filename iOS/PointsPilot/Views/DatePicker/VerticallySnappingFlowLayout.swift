@@ -131,9 +131,9 @@ final class VerticallySnappingFlowLayout: UICollectionViewFlowLayout {
     }
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        super.layoutAttributesForElements(in: rect)?.enumerated().map { index, originalAttrs in
+        super.layoutAttributesForElements(in: rect)?.map { originalAttrs in
             let attrs = originalAttrs.copy() as! UICollectionViewLayoutAttributes
-            attrs.alpha = index == currentCell ? 1 : 0.5
+            attrs.alpha = attrs.indexPath.item == currentCell ? 1 : 0.5
             return attrs
         }
     }

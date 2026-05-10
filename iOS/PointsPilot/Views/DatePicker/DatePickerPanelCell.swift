@@ -7,8 +7,6 @@ final class DatePickerPanelCell: UICollectionViewCell {
     private let titleLabel = UILabel()
     private let container = UIView()
 
-    private weak var embeddedPanel: UIView?
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
@@ -22,20 +20,20 @@ final class DatePickerPanelCell: UICollectionViewCell {
     func embed(panelView: UIView, title: String) {
         titleLabel.text = title
 
-        // Move the panel into this cell only if it isn't already there.
-        // Re-parenting it harmlessly removes it from any previous cell.
-        if embeddedPanel !== panelView {
-            embeddedPanel?.removeFromSuperview()
-            panelView.translatesAutoresizingMaskIntoConstraints = false
-            container.addSubview(panelView)
-            NSLayoutConstraint.activate([
-                panelView.topAnchor.constraint(equalTo: container.topAnchor),
-                panelView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
-                panelView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
-                panelView.bottomAnchor.constraint(equalTo: container.bottomAnchor)
-            ])
-            embeddedPanel = panelView
+        if panelView.superview === container { return }
+
+        for subview in container.subviews where subview !== panelView {
+            subview.removeFromSuperview()
         }
+
+        panelView.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(panelView)
+        NSLayoutConstraint.activate([
+            panelView.topAnchor.constraint(equalTo: container.topAnchor),
+            panelView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            panelView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            panelView.bottomAnchor.constraint(equalTo: container.bottomAnchor)
+        ])
     }
 
     private func commonInit() {
