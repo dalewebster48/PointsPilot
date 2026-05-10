@@ -36,8 +36,7 @@ final class TripBuilderDatePickerViewModel: TripBuilderDatePickerViewModelProtoc
     private(set) var focusedPanel: DatePickerPanel = .months { didSet { bind() } }
 
     lazy var monthInputViewModel: any MonthGridInputViewModelProtocol = inputFactory.makeMonthGridInputViewModel(
-        parentDelegate: self,
-        initialRange: range
+        parentDelegate: self
     )
 
     lazy var rangeInputViewModel: any RangeSliderInputViewModelProtocol = inputFactory.makeRangeSliderInputViewModel(

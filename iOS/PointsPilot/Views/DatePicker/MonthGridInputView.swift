@@ -27,7 +27,6 @@ final class MonthGridInputView: UIView {
         self.viewModel = viewModel
         viewModel.viewDelegate = self
         collectionView.reloadData()
-        applySelections()
     }
 
     private func commonInit() {
@@ -35,7 +34,6 @@ final class MonthGridInputView: UIView {
 
         collectionView.backgroundColor = .clear
         collectionView.isScrollEnabled = false
-        collectionView.allowsMultipleSelection = true
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.register(
             UINib(nibName: "SelectablePillCell", bundle: nil),
@@ -60,16 +58,6 @@ final class MonthGridInputView: UIView {
         return CGSize(width: UIView.noIntrinsicMetric, height: rowHeight * CGFloat(rows) + totalSpacing)
     }
 
-    private func applySelections() {
-        guard let viewModel else { return }
-        for indexPath in collectionView.indexPathsForSelectedItems ?? [] {
-            collectionView.deselectItem(at: indexPath, animated: false)
-        }
-        for index in viewModel.selectedIndices {
-            collectionView.selectItem(at: IndexPath(item: index, section: 0), animated: false, scrollPosition: [])
-        }
-    }
-
     private func itemWidth(for boundsWidth: CGFloat) -> CGFloat {
         let totalSpacing = spacing * CGFloat(columnCount - 1)
         return floor((boundsWidth - totalSpacing) / CGFloat(columnCount))
@@ -80,7 +68,7 @@ final class MonthGridInputView: UIView {
 
 extension MonthGridInputView: MonthGridInputViewModelViewDelegate {
     func bind(viewModel: any MonthGridInputViewModelProtocol) {
-        applySelections()
+        collectionView.reloadData()
     }
 }
 
@@ -105,6 +93,11 @@ extension MonthGridInputView: UICollectionViewDataSource {
         if let month = viewModel?.months[indexPath.item] {
             cell.configure(title: month.label, subtitle: month.year, size: .large)
         }
+        switch viewModel?.state(at: indexPath.item) ?? .selectable {
+        case .selectable: cell.displayState = .normal
+        case .selected:   cell.displayState = .selected
+        case .disabled:   cell.displayState = .disabled
+        }
         return cell
     }
 }
@@ -124,13 +117,7 @@ extension MonthGridInputView: UICollectionViewDelegateFlowLayout {
         _ collectionView: UICollectionView,
         didSelectItemAt indexPath: IndexPath
     ) {
-        viewModel?.didTapMonth(at: indexPath.item)
-    }
-
-    func collectionView(
-        _ collectionView: UICollectionView,
-        didDeselectItemAt indexPath: IndexPath
-    ) {
+        collectionView.deselectItem(at: indexPath, animated: false)
         viewModel?.didTapMonth(at: indexPath.item)
     }
 }

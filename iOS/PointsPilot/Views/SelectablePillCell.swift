@@ -7,6 +7,12 @@ final class SelectablePillCell: UICollectionViewCell {
         case large
     }
 
+    enum DisplayState {
+        case normal
+        case selected
+        case disabled
+    }
+
     @IBOutlet private weak var labelStack: UIStackView!
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var subtitleLabel: UILabel!
@@ -17,15 +23,20 @@ final class SelectablePillCell: UICollectionViewCell {
 
     static let reuseIdentifier = "SelectablePillCell"
 
-    override var isSelected: Bool {
-        didSet { applySelectionState() }
+    var displayState: DisplayState = .normal {
+        didSet { applyDisplayState() }
     }
 
     override func awakeFromNib() {
         super.awakeFromNib()
         clipsToBounds = true
         applySize(.medium)
-        applySelectionState()
+        applyDisplayState()
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        displayState = .normal
     }
 
     func configure(
@@ -71,15 +82,26 @@ final class SelectablePillCell: UICollectionViewCell {
         }
     }
 
-    private func applySelectionState() {
-        if isSelected {
-            backgroundColor = Theme.primaryAccent
-            titleLabel.textColor = .white
-            subtitleLabel.textColor = UIColor.white.withAlphaComponent(0.7)
-        } else {
+    private func applyDisplayState() {
+        switch displayState {
+        case .normal:
             backgroundColor = Theme.secondaryBackground
             titleLabel.textColor = Theme.primaryLabel
             subtitleLabel.textColor = Theme.secondaryLabel
+            contentView.alpha = 1.0
+            isUserInteractionEnabled = true
+        case .selected:
+            backgroundColor = Theme.primaryAccent
+            titleLabel.textColor = .white
+            subtitleLabel.textColor = UIColor.white.withAlphaComponent(0.7)
+            contentView.alpha = 1.0
+            isUserInteractionEnabled = true
+        case .disabled:
+            backgroundColor = Theme.secondaryBackground
+            titleLabel.textColor = Theme.primaryLabel
+            subtitleLabel.textColor = Theme.secondaryLabel
+            contentView.alpha = 0.4
+            isUserInteractionEnabled = false
         }
     }
 }

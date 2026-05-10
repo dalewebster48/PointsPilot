@@ -37,7 +37,6 @@ final class TripBuilderLocationPickerViewController: UIViewController {
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
             withReuseIdentifier: PillSectionHeaderView.reuseIdentifier
         )
-        collectionView.allowsMultipleSelection = true
         collectionView.dataSource = self
         collectionView.delegate = self
 
@@ -79,18 +78,6 @@ extension TripBuilderLocationPickerViewController: TripBuilderLocationPickerView
         summaryBanner.configure(viewModel: viewModel.summaryViewModel)
         view.setNeedsLayout()
         collectionView.reloadData()
-        restoreSelections()
-    }
-
-    private func restoreSelections() {
-        for (index, country) in viewModel.countries.enumerated() where viewModel.selectedCountries.contains(country) {
-            let indexPath = IndexPath(item: index, section: Section.countries.rawValue)
-            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
-        }
-        for (index, airport) in viewModel.filteredAirports.enumerated() where viewModel.selectedAirportCodes.contains(airport.code) {
-            let indexPath = IndexPath(item: index, section: Section.airports.rawValue)
-            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
-        }
     }
 }
 
@@ -123,10 +110,13 @@ extension TripBuilderLocationPickerViewController: UICollectionViewDataSource {
 
         switch Section(rawValue: indexPath.section) {
         case .countries:
-            cell.configure(title: viewModel.countries[indexPath.item])
+            let country = viewModel.countries[indexPath.item]
+            cell.configure(title: country)
+            cell.displayState = viewModel.selectedCountries.contains(country) ? .selected : .normal
         case .airports:
             let airport = viewModel.filteredAirports[indexPath.item]
             cell.configure(title: "\(airport.code) – \(airport.name)")
+            cell.displayState = viewModel.selectedAirportCodes.contains(airport.code) ? .selected : .normal
         case .none:
             break
         }
@@ -168,20 +158,7 @@ extension TripBuilderLocationPickerViewController: UICollectionViewDelegateFlowL
         _ collectionView: UICollectionView,
         didSelectItemAt indexPath: IndexPath
     ) {
-        switch Section(rawValue: indexPath.section) {
-        case .countries:
-            viewModel.didToggleCountry(viewModel.countries[indexPath.item])
-        case .airports:
-            viewModel.didToggleAirport(at: indexPath.item)
-        case .none:
-            break
-        }
-    }
-
-    func collectionView(
-        _ collectionView: UICollectionView,
-        didDeselectItemAt indexPath: IndexPath
-    ) {
+        collectionView.deselectItem(at: indexPath, animated: false)
         switch Section(rawValue: indexPath.section) {
         case .countries:
             viewModel.didToggleCountry(viewModel.countries[indexPath.item])

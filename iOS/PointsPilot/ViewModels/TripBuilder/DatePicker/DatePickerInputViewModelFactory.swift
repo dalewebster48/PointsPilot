@@ -2,8 +2,7 @@ import Foundation
 
 protocol DatePickerInputViewModelFactory: AnyObject {
     func makeMonthGridInputViewModel(
-        parentDelegate: any DatePickerPanelDelegate,
-        initialRange: DayRange
+        parentDelegate: any DatePickerPanelDelegate
     ) -> any MonthGridInputViewModelProtocol
 
     func makeRangeSliderInputViewModel(

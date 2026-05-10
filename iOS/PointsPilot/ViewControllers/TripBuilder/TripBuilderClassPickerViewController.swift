@@ -82,12 +82,6 @@ extension TripBuilderClassPickerViewController: TripBuilderClassPickerViewModelV
         }
 
         classCollectionView.reloadData()
-        for (index, seatClass) in seatClasses.enumerated() {
-            let indexPath = IndexPath(item: index, section: 0)
-            if viewModel.selectedClass == seatClass {
-                classCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
-            }
-        }
     }
 }
 
@@ -109,7 +103,9 @@ extension TripBuilderClassPickerViewController: UICollectionViewDataSource {
             withReuseIdentifier: SelectablePillCell.reuseIdentifier,
             for: indexPath
         ) as! SelectablePillCell
-        cell.configure(title: seatClasses[indexPath.item].rawValue.capitalized)
+        let seatClass = seatClasses[indexPath.item]
+        cell.configure(title: seatClass.rawValue.capitalized)
+        cell.displayState = viewModel.selectedClass == seatClass ? .selected : .normal
         return cell
     }
 }
@@ -121,13 +117,7 @@ extension TripBuilderClassPickerViewController: UICollectionViewDelegate {
         _ collectionView: UICollectionView,
         didSelectItemAt indexPath: IndexPath
     ) {
-        viewModel.didSelectClass(seatClasses[indexPath.item])
-    }
-
-    func collectionView(
-        _ collectionView: UICollectionView,
-        didDeselectItemAt indexPath: IndexPath
-    ) {
+        collectionView.deselectItem(at: indexPath, animated: false)
         viewModel.didSelectClass(seatClasses[indexPath.item])
     }
 }

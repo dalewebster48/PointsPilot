@@ -131,13 +131,9 @@ extension ViewModelFactory: TripBuilderSummaryViewModelFactory {
 
 extension ViewModelFactory: DatePickerInputViewModelFactory {
     func makeMonthGridInputViewModel(
-        parentDelegate: any DatePickerPanelDelegate,
-        initialRange: DayRange
+        parentDelegate: any DatePickerPanelDelegate
     ) -> any MonthGridInputViewModelProtocol {
-        MonthGridInputViewModel(
-            parentDelegate: parentDelegate,
-            initialRange: initialRange
-        )
+        MonthGridInputViewModel(parentDelegate: parentDelegate)
     }
 
     func makeRangeSliderInputViewModel(

@@ -1,6 +1,7 @@
 import Foundation
 
 struct DayRange: Equatable {
+    // TODO: Make these Dates
     var startDay: Int
     var endDay: Int
 
