@@ -75,6 +75,7 @@ final class CalendarInputViewModel: CalendarInputViewModelProtocol {
             }
             anchorMode = .start
         }
+        self.range = next
         parentDelegate?.panel(self, didUpdate: next)
     }
 
