@@ -7,7 +7,7 @@ struct DatePickerMonth: Equatable {
     let lastDay: Int
 }
 
-enum MonthCellState {
+nonisolated enum MonthCellState {
     case selectable
     case selected
     case disabled

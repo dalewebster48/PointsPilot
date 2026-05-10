@@ -87,6 +87,7 @@ final class RangeSliderInputViewModel: RangeSliderInputViewModelProtocol {
         guard clampedLower <= clampedUpper else { return }
         let next = DayRange(startDay: clampedLower, endDay: clampedUpper)
         guard next != range else { return }
+        range = next
         parentDelegate?.panel(self, didUpdate: next)
     }
 

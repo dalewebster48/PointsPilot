@@ -66,6 +66,11 @@ final class RangeSlider: UIControl {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        // Sublayers added via addSublayer trigger implicit 0.25s animations
+        // on frame changes — at pan-event rate that backlogs into visible lag.
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+
         let trackY = (bounds.height - trackHeight) / 2
         let trackInset = thumbSize / 2
         trackLayer.frame = CGRect(
@@ -82,6 +87,12 @@ final class RangeSlider: UIControl {
         let thumbY = (bounds.height - thumbSize) / 2
         lowerThumbLayer.frame = CGRect(x: lowerX - thumbSize / 2, y: thumbY, width: thumbSize, height: thumbSize)
         upperThumbLayer.frame = CGRect(x: upperX - thumbSize / 2, y: thumbY, width: thumbSize, height: thumbSize)
+
+        let thumbShadowPath = UIBezierPath(ovalIn: CGRect(origin: .zero, size: CGSize(width: thumbSize, height: thumbSize))).cgPath
+        lowerThumbLayer.shadowPath = thumbShadowPath
+        upperThumbLayer.shadowPath = thumbShadowPath
+
+        CATransaction.commit()
     }
 
     private func positionForValue(_ value: Double) -> CGFloat {
