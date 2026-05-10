@@ -61,6 +61,5 @@ enum NetworkError: Error {
 }
 
 extension URL {
-//    static var base: URL { URL(string: "http://localhost:4000")! }
-    static var base: URL { URL(string: "http://192.168.0.11:4000")! }
+    static var base: URL { PropertyListProvider.serverBaseURL }
 }
