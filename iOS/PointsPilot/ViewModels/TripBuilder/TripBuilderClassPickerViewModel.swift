@@ -12,6 +12,7 @@ protocol TripBuilderClassPickerViewModelProtocol: AnyObject {
     var selectedClass: SeatClass? { get }
     var dealsOnly: Bool { get }
     var maxCost: Int? { get }
+    var summaryViewModel: any TripBuilderSummaryViewModelProtocol { get }
 
     var viewDelegate: (any TripBuilderClassPickerViewModelViewDelegate)? { get set }
 
@@ -28,10 +29,25 @@ protocol TripBuilderClassPickerViewModelViewDelegate: AnyObject {
 final class TripBuilderClassPickerViewModel: TripBuilderClassPickerViewModelProtocol {
     private weak var pickerDelegate: (any TripBuilderClassPickerDelegate)?
     private let navigator: Navigator
+    private let summaryFactory: any TripBuilderSummaryViewModelFactory
+    private let summaryProvider: any ClassSummaryProvider
 
     var selectedClass: SeatClass? { didSet { bind() } }
     var dealsOnly: Bool = false { didSet { bind() } }
     var maxCost: Int? { didSet { bind() } }
+
+    var summaryViewModel: any TripBuilderSummaryViewModelProtocol {
+        summaryFactory.makeTripBuilderSummaryViewModel(
+            title: "How are you flying?",
+            summary: summaryProvider.summary(
+                seatClass: selectedClass,
+                dealsOnly: dealsOnly,
+                maxCost: maxCost
+            ),
+            instruction: "Pick a class and any deal preferences",
+            buttonTitle: "Ok"
+        )
+    }
 
     weak var viewDelegate: (any TripBuilderClassPickerViewModelViewDelegate)? {
         didSet { bind() }
@@ -39,12 +55,16 @@ final class TripBuilderClassPickerViewModel: TripBuilderClassPickerViewModelProt
 
     init(
         navigator: Navigator,
+        summaryFactory: any TripBuilderSummaryViewModelFactory,
+        summaryProvider: any ClassSummaryProvider,
         pickerDelegate: any TripBuilderClassPickerDelegate,
         seatClass: SeatClass?,
         dealsOnly: Bool,
         maxCost: Int?
     ) {
         self.navigator = navigator
+        self.summaryFactory = summaryFactory
+        self.summaryProvider = summaryProvider
         self.pickerDelegate = pickerDelegate
         self.selectedClass = seatClass
         self.dealsOnly = dealsOnly

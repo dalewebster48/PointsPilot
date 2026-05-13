@@ -4,7 +4,7 @@ final class ClassSectionViewModel: TripBuilderSectionViewModel {
     private let navigator: any Navigator
     private weak var pickerDelegate: (any TripBuilderClassPickerDelegate)?
 
-    let iconName = "seat.airdrop"
+    let iconName = "airplaneseat"
     let title = "How?"
     let placeholder = "Any way possible"
 

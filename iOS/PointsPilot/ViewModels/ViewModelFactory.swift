@@ -101,6 +101,8 @@ final class ViewModelFactory {
     ) -> TripBuilderClassPickerViewModel {
         TripBuilderClassPickerViewModel(
             navigator: navigator,
+            summaryFactory: self,
+            summaryProvider: ClassSummaryProviderImpl(),
             pickerDelegate: delegate,
             seatClass: seatClass,
             dealsOnly: dealsOnly,

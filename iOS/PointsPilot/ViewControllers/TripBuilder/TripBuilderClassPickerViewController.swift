@@ -2,13 +2,23 @@ import UIKit
 
 final class TripBuilderClassPickerViewController: UIViewController {
     @IBOutlet private weak var classCollectionView: UICollectionView!
-    @IBOutlet private weak var optionsContainer: UIView!
+    @IBOutlet private weak var maxPointsContainer: UIView!
+    @IBOutlet private weak var maxPointsValueLabel: UILabel!
+    @IBOutlet private weak var maxPointsSlider: UISlider!
+    @IBOutlet private weak var dealsContainer: UIView!
+    @IBOutlet private weak var dealsCardButton: UIButton!
     @IBOutlet private weak var dealsOnlySwitch: UISwitch!
-    @IBOutlet private weak var maxCostTextField: UITextField!
-    @IBOutlet private weak var maxCostContainer: UIView!
+    @IBOutlet private weak var summaryBanner: TripBuilderSummary!
 
     private let viewModel: any TripBuilderClassPickerViewModelProtocol
     private let seatClasses: [SeatClass] = [.economy, .premium, .upper]
+
+    private let pointsMin: Float = 5_000
+    private let pointsMax: Float = 250_000
+    private let pointsStep: Float = 5_000
+
+    private let cabinSpacing: CGFloat = 10
+    private let cabinHorizontalInset: CGFloat = 20
 
     init(viewModel: any TripBuilderClassPickerViewModelProtocol) {
         self.viewModel = viewModel
@@ -22,13 +32,7 @@ final class TripBuilderClassPickerViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "How?"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: "Done",
-            style: .done,
-            target: self,
-            action: #selector(didTapDone)
-        )
+        summaryBanner.onDone = { [weak self] in self?.viewModel.didTapDone() }
 
         let pillNib = UINib(nibName: "SelectablePillCell", bundle: nil)
         classCollectionView.register(pillNib, forCellWithReuseIdentifier: SelectablePillCell.reuseIdentifier)
@@ -36,13 +40,17 @@ final class TripBuilderClassPickerViewController: UIViewController {
         classCollectionView.delegate = self
 
         if let layout = classCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-            layout.minimumInteritemSpacing = 8
-            layout.minimumLineSpacing = 8
+            layout.estimatedItemSize = .zero
+            layout.minimumInteritemSpacing = cabinSpacing
+            layout.minimumLineSpacing = cabinSpacing
         }
 
-        maxCostTextField.keyboardType = .numberPad
-        maxCostTextField.addTarget(self, action: #selector(maxCostChanged), for: .editingChanged)
+        maxPointsSlider.minimumValue = pointsMin
+        maxPointsSlider.maximumValue = pointsMax
+        maxPointsSlider.value = pointsMax
+
+        dealsCardButton.layer.cornerRadius = 18
+        dealsCardButton.clipsToBounds = true
 
         applyTheme()
         viewModel.viewDelegate = self
@@ -50,20 +58,32 @@ final class TripBuilderClassPickerViewController: UIViewController {
 
     @IBAction private func dealsOnlyChanged(_ sender: UISwitch) {
         viewModel.didToggleDealsOnly(sender.isOn)
+        defaultMaxPointsIfNeeded()
     }
 
-    @objc private func maxCostChanged() {
-        let value = maxCostTextField.text.flatMap { Int($0) }
-        viewModel.didChangeMaxCost(value)
+    @IBAction private func dealsCardTapped() {
+        viewModel.didToggleDealsOnly(!viewModel.dealsOnly)
+        defaultMaxPointsIfNeeded()
     }
 
-    @objc private func didTapDone() {
-        viewModel.didTapDone()
+    @IBAction private func maxPointsSliderChanged(_ sender: UISlider) {
+        let rounded = (sender.value / pointsStep).rounded() * pointsStep
+        sender.value = rounded
+        viewModel.didChangeMaxCost(Int(rounded))
+    }
+
+    private func defaultMaxPointsIfNeeded() {
+        guard viewModel.selectedClass != nil,
+              !viewModel.dealsOnly,
+              viewModel.maxCost == nil else { return }
+        viewModel.didChangeMaxCost(Int(pointsMax))
     }
 
     private func applyTheme() {
         view.backgroundColor = Theme.background
         classCollectionView.backgroundColor = Theme.background
+        maxPointsSlider.minimumTrackTintColor = Theme.primaryAccent
+        dealsCardButton.backgroundColor = Theme.secondaryBackground
     }
 }
 
@@ -71,17 +91,24 @@ final class TripBuilderClassPickerViewController: UIViewController {
 
 extension TripBuilderClassPickerViewController: TripBuilderClassPickerViewModelViewDelegate {
     func bind(viewModel: any TripBuilderClassPickerViewModelProtocol) {
-        optionsContainer.isHidden = viewModel.selectedClass == nil
-        dealsOnlySwitch.isOn = viewModel.dealsOnly
-        maxCostContainer.isHidden = viewModel.dealsOnly
+        let hasClass = viewModel.selectedClass != nil
+        let dim: CGFloat = hasClass ? 1.0 : 0.4
 
-        if let maxCost = viewModel.maxCost {
-            maxCostTextField.text = String(maxCost)
-        } else {
-            maxCostTextField.text = nil
-        }
+        maxPointsContainer.alpha = dim
+        maxPointsContainer.isUserInteractionEnabled = hasClass
+        dealsContainer.alpha = dim
+        dealsContainer.isUserInteractionEnabled = hasClass
+
+        maxPointsContainer.isHidden = hasClass && viewModel.dealsOnly
+
+        dealsOnlySwitch.isOn = viewModel.dealsOnly
+
+        let displayCost = viewModel.maxCost ?? Int(pointsMax)
+        maxPointsSlider.value = Float(displayCost)
+        maxPointsValueLabel.text = "\(displayCost.formatted()) pts"
 
         classCollectionView.reloadData()
+        summaryBanner.configure(viewModel: viewModel.summaryViewModel)
     }
 }
 
@@ -104,7 +131,10 @@ extension TripBuilderClassPickerViewController: UICollectionViewDataSource {
             for: indexPath
         ) as! SelectablePillCell
         let seatClass = seatClasses[indexPath.item]
-        cell.configure(title: seatClass.rawValue.capitalized)
+        cell.configure(
+            title: seatClass.displayName,
+            size: .large
+        )
         cell.displayState = viewModel.selectedClass == seatClass ? .selected : .normal
         return cell
     }
@@ -119,5 +149,29 @@ extension TripBuilderClassPickerViewController: UICollectionViewDelegate {
     ) {
         collectionView.deselectItem(at: indexPath, animated: false)
         viewModel.didSelectClass(seatClasses[indexPath.item])
+        defaultMaxPointsIfNeeded()
+    }
+}
+
+// MARK: - UICollectionViewDelegateFlowLayout
+
+extension TripBuilderClassPickerViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+        let width = (collectionView.bounds.width - cabinSpacing) / 2
+        return CGSize(width: width.rounded(.down), height: 62)
+    }
+}
+
+private extension SeatClass {
+    var displayName: String {
+        switch self {
+        case .economy: return "Economy"
+        case .premium: return "Premium econ."
+        case .upper:   return "Upper"
+        }
     }
 }
