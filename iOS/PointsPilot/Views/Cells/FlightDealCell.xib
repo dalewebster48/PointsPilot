@@ -28,53 +28,98 @@
                         <fontDescription key="fontDescription" type="system" weight="bold" pointSize="13"/>
                     </label>
 
-                    <!-- ECONOMY column -->
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="30k" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ecoCost">
-                        <rect key="frame" x="20" y="44" width="50" height="22"/>
-                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="19"/>
-                    </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="pts" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ecoUnit">
-                        <rect key="frame" x="72" y="50" width="20" height="14"/>
-                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="10"/>
-                    </label>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ecoBar" customClass="ValueBarView" customModule="PointsPilot" customModuleProvider="target">
-                        <rect key="frame" x="20" y="74" width="100" height="3"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="3" id="ebh"/>
-                        </constraints>
-                    </view>
-
-                    <!-- PREMIUM column -->
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="55k" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="preCost">
-                        <rect key="frame" x="144" y="44" width="50" height="22"/>
-                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="19"/>
-                    </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="pts" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="preUnit">
-                        <rect key="frame" x="196" y="50" width="20" height="14"/>
-                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="10"/>
-                    </label>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="preBar" customClass="ValueBarView" customModule="PointsPilot" customModuleProvider="target">
-                        <rect key="frame" x="144" y="74" width="100" height="3"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="3" id="pbh"/>
-                        </constraints>
-                    </view>
-
-                    <!-- UPPER column -->
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="135k" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="upCost">
-                        <rect key="frame" x="268" y="44" width="50" height="22"/>
-                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="19"/>
-                    </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="pts" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="upUnit">
-                        <rect key="frame" x="320" y="50" width="20" height="14"/>
-                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="10"/>
-                    </label>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="upBar" customClass="ValueBarView" customModule="PointsPilot" customModuleProvider="target">
-                        <rect key="frame" x="268" y="74" width="100" height="3"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="3" id="ubh"/>
-                        </constraints>
-                    </view>
+                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="colsStack">
+                        <rect key="frame" x="20" y="44" width="353" height="31"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ecoColumn">
+                                <rect key="frame" x="0.0" y="0.0" width="117" height="31"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="30k" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ecoCost">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="22"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="19"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="pts" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ecoUnit">
+                                        <rect key="frame" x="52" y="6" width="20" height="14"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="10"/>
+                                    </label>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ecoBar" customClass="ValueBarView" customModule="PointsPilot" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="105" height="3"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="3" id="ebh"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="ecoCost" firstAttribute="leading" secondItem="ecoColumn" secondAttribute="leading" id="ec1"/>
+                                    <constraint firstItem="ecoCost" firstAttribute="top" secondItem="ecoColumn" secondAttribute="top" id="ec2"/>
+                                    <constraint firstItem="ecoUnit" firstAttribute="leading" secondItem="ecoCost" secondAttribute="trailing" constant="3" id="ec3"/>
+                                    <constraint firstItem="ecoUnit" firstAttribute="firstBaseline" secondItem="ecoCost" secondAttribute="firstBaseline" id="ec4"/>
+                                    <constraint firstItem="ecoBar" firstAttribute="leading" secondItem="ecoColumn" secondAttribute="leading" id="ec5"/>
+                                    <constraint firstItem="ecoBar" firstAttribute="top" secondItem="ecoCost" secondAttribute="bottom" constant="6" id="ec6"/>
+                                    <constraint firstAttribute="trailing" secondItem="ecoBar" secondAttribute="trailing" constant="12" id="ec7"/>
+                                    <constraint firstAttribute="bottom" secondItem="ecoBar" secondAttribute="bottom" id="ec8"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="preColumn">
+                                <rect key="frame" x="117" y="0.0" width="118" height="31"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="55k" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="preCost">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="22"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="19"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="pts" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="preUnit">
+                                        <rect key="frame" x="52" y="6" width="20" height="14"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="10"/>
+                                    </label>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="preBar" customClass="ValueBarView" customModule="PointsPilot" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="106" height="3"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="3" id="pbh"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="preCost" firstAttribute="leading" secondItem="preColumn" secondAttribute="leading" id="pc1"/>
+                                    <constraint firstItem="preCost" firstAttribute="top" secondItem="preColumn" secondAttribute="top" id="pc2"/>
+                                    <constraint firstItem="preUnit" firstAttribute="leading" secondItem="preCost" secondAttribute="trailing" constant="3" id="pc3"/>
+                                    <constraint firstItem="preUnit" firstAttribute="firstBaseline" secondItem="preCost" secondAttribute="firstBaseline" id="pc4"/>
+                                    <constraint firstItem="preBar" firstAttribute="leading" secondItem="preColumn" secondAttribute="leading" id="pc5"/>
+                                    <constraint firstItem="preBar" firstAttribute="top" secondItem="preCost" secondAttribute="bottom" constant="6" id="pc6"/>
+                                    <constraint firstAttribute="trailing" secondItem="preBar" secondAttribute="trailing" constant="12" id="pc7"/>
+                                    <constraint firstAttribute="bottom" secondItem="preBar" secondAttribute="bottom" id="pc8"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="upColumn">
+                                <rect key="frame" x="235" y="0.0" width="118" height="31"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="135k" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="upCost">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="22"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="19"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="pts" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="upUnit">
+                                        <rect key="frame" x="52" y="6" width="20" height="14"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="10"/>
+                                    </label>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="upBar" customClass="ValueBarView" customModule="PointsPilot" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="106" height="3"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="3" id="ubh"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="upCost" firstAttribute="leading" secondItem="upColumn" secondAttribute="leading" id="uc1"/>
+                                    <constraint firstItem="upCost" firstAttribute="top" secondItem="upColumn" secondAttribute="top" id="uc2"/>
+                                    <constraint firstItem="upUnit" firstAttribute="leading" secondItem="upCost" secondAttribute="trailing" constant="3" id="uc3"/>
+                                    <constraint firstItem="upUnit" firstAttribute="firstBaseline" secondItem="upCost" secondAttribute="firstBaseline" id="uc4"/>
+                                    <constraint firstItem="upBar" firstAttribute="leading" secondItem="upColumn" secondAttribute="leading" id="uc5"/>
+                                    <constraint firstItem="upBar" firstAttribute="top" secondItem="upCost" secondAttribute="bottom" constant="6" id="uc6"/>
+                                    <constraint firstAttribute="trailing" secondItem="upBar" secondAttribute="trailing" constant="12" id="uc7"/>
+                                    <constraint firstAttribute="bottom" secondItem="upBar" secondAttribute="bottom" id="uc8"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                    </stackView>
 
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sep">
                         <rect key="frame" x="20" y="95" width="353" height="1"/>
@@ -92,30 +137,9 @@
                 <constraint firstAttribute="trailing" secondItem="date" secondAttribute="trailing" constant="20" id="c5"/>
                 <constraint firstItem="date" firstAttribute="firstBaseline" secondItem="route" secondAttribute="firstBaseline" id="c6"/>
 
-                <constraint firstItem="ecoCost" firstAttribute="leading" secondItem="cell" secondAttribute="leading" constant="20" id="c10"/>
-                <constraint firstItem="ecoCost" firstAttribute="top" secondItem="route" secondAttribute="bottom" constant="8" id="c11"/>
-                <constraint firstItem="ecoUnit" firstAttribute="leading" secondItem="ecoCost" secondAttribute="trailing" constant="3" id="c12"/>
-                <constraint firstItem="ecoUnit" firstAttribute="firstBaseline" secondItem="ecoCost" secondAttribute="firstBaseline" id="c13"/>
-                <constraint firstItem="ecoBar" firstAttribute="leading" secondItem="ecoCost" secondAttribute="leading" id="c14"/>
-                <constraint firstItem="ecoBar" firstAttribute="top" secondItem="ecoCost" secondAttribute="bottom" constant="6" id="c15"/>
-
-                <constraint firstItem="preCost" firstAttribute="leading" secondItem="cell" secondAttribute="centerX" constant="-50" id="c20"/>
-                <constraint firstItem="preCost" firstAttribute="firstBaseline" secondItem="ecoCost" secondAttribute="firstBaseline" id="c21"/>
-                <constraint firstItem="preUnit" firstAttribute="leading" secondItem="preCost" secondAttribute="trailing" constant="3" id="c22"/>
-                <constraint firstItem="preUnit" firstAttribute="firstBaseline" secondItem="preCost" secondAttribute="firstBaseline" id="c23"/>
-                <constraint firstItem="preBar" firstAttribute="leading" secondItem="preCost" secondAttribute="leading" id="c24"/>
-                <constraint firstItem="preBar" firstAttribute="top" secondItem="ecoBar" secondAttribute="top" id="c25"/>
-
-                <constraint firstItem="upCost" firstAttribute="leading" secondItem="cell" secondAttribute="trailing" constant="-125" id="c30"/>
-                <constraint firstItem="upCost" firstAttribute="firstBaseline" secondItem="ecoCost" secondAttribute="firstBaseline" id="c31"/>
-                <constraint firstItem="upUnit" firstAttribute="leading" secondItem="upCost" secondAttribute="trailing" constant="3" id="c32"/>
-                <constraint firstItem="upUnit" firstAttribute="firstBaseline" secondItem="upCost" secondAttribute="firstBaseline" id="c33"/>
-                <constraint firstItem="upBar" firstAttribute="leading" secondItem="upCost" secondAttribute="leading" id="c34"/>
-                <constraint firstItem="upBar" firstAttribute="top" secondItem="ecoBar" secondAttribute="top" id="c35"/>
-
-                <constraint firstItem="ecoBar" firstAttribute="trailing" secondItem="preCost" secondAttribute="leading" constant="-12" id="c40"/>
-                <constraint firstItem="preBar" firstAttribute="trailing" secondItem="upCost" secondAttribute="leading" constant="-12" id="c41"/>
-                <constraint firstAttribute="trailing" secondItem="upBar" secondAttribute="trailing" constant="40" id="c42"/>
+                <constraint firstItem="colsStack" firstAttribute="leading" secondItem="cell" secondAttribute="leading" constant="20" id="cs1"/>
+                <constraint firstAttribute="trailing" secondItem="colsStack" secondAttribute="trailing" constant="20" id="cs2"/>
+                <constraint firstItem="colsStack" firstAttribute="top" secondItem="route" secondAttribute="bottom" constant="8" id="cs3"/>
 
                 <constraint firstItem="sep" firstAttribute="leading" secondItem="cell" secondAttribute="leading" constant="20" id="s1"/>
                 <constraint firstAttribute="trailing" secondItem="sep" secondAttribute="trailing" constant="20" id="s2"/>

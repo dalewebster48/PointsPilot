@@ -31,6 +31,15 @@ final class ViewModelFactory {
         )
     }
 
+    func makeFlightResultsPlaceholderViewModel() -> FlightResultsViewModel {
+        FlightResultsViewModel(
+            flightService: services.flightService,
+            navigator: navigator,
+            cellViewModelFactory: self,
+            placeholderMode: true
+        )
+    }
+
     func makeSearchFilterViewModel(
         filterDelegate: any SearchFilterDelegate
     ) -> SearchFilterViewModel {

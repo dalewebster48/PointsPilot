@@ -62,6 +62,16 @@ final class FlightResultsViewController: UIViewController {
         viewModel.viewDelegate = self
     }
 
+    override func viewWillTransition(
+        to size: CGSize,
+        with coordinator: any UIViewControllerTransitionCoordinator
+    ) {
+        super.viewWillTransition(to: size, with: coordinator)
+        coordinator.animate(alongsideTransition: { [weak self] _ in
+            self?.collectionView.collectionViewLayout.invalidateLayout()
+        })
+    }
+
     // MARK: - Setup
 
     private func buildSortPills() {
@@ -107,6 +117,18 @@ final class FlightResultsViewController: UIViewController {
     // MARK: - State Machine
 
     private func applyState() {
+        let resultsChromeHidden: Bool
+        switch state {
+        case .idle, .loading, .empty, .error:
+            resultsChromeHidden = true
+        case .loaded:
+            resultsChromeHidden = false
+        }
+        sortStackView.isHidden = resultsChromeHidden
+        economyHeaderLabel.isHidden = resultsChromeHidden
+        premiumHeaderLabel.isHidden = resultsChromeHidden
+        upperHeaderLabel.isHidden = resultsChromeHidden
+
         switch state {
         case .idle:
             break
@@ -212,11 +234,12 @@ extension FlightResultsViewController: FlightResultsViewModelViewDelegate {
         updateSortAppearance(activeSort: viewModel.activeSort)
         displayedCellViewModels = viewModel.cellViewModels
 
-        if viewModel.isLoading && viewModel.cellViewModels.isEmpty {
+        if viewModel.isLoading && !viewModel.hasResultsToDisplay {
             state = .loading
-        } else if let error = viewModel.error, viewModel.cellViewModels.isEmpty {
+        } else if let error = viewModel.error, !viewModel.hasResultsToDisplay {
             state = .error(message: error)
-        } else if viewModel.cellViewModels.isEmpty {
+        } else if !viewModel.hasResultsToDisplay {
+            emptyLabel.text = viewModel.emptyMessage
             state = .empty
         } else {
             state = .loaded

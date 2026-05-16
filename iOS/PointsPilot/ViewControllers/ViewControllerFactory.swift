@@ -19,6 +19,21 @@ final class ViewControllerFactory {
         return FlightResultsViewController(viewModel: viewModel)
     }
 
+    func makeFlightResultsPlaceholderViewController() -> FlightResultsViewController {
+        let viewModel = viewModelFactory.makeFlightResultsPlaceholderViewModel()
+        return FlightResultsViewController(viewModel: viewModel)
+    }
+
+    func makeSidebarContainerViewController(
+        primaryNav: UINavigationController,
+        secondaryNav: UINavigationController
+    ) -> SidebarContainerViewController {
+        SidebarContainerViewController(
+            primaryNav: primaryNav,
+            secondaryNav: secondaryNav
+        )
+    }
+
     func makeSearchFilterViewController(
         filterDelegate: any SearchFilterDelegate
     ) -> SearchFilterViewController {

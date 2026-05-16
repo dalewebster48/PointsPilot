@@ -7,6 +7,8 @@ protocol FlightResultsViewModelProtocol: AnyObject {
     var error: String? { get }
     var activeFilter: FlightSearchFilter { get }
     var activeSort: FlightSort { get }
+    var emptyMessage: String { get }
+    var hasResultsToDisplay: Bool { get }
 
     var viewDelegate: (any FlightResultsViewModelViewDelegate)? { get set }
 
@@ -24,6 +26,7 @@ final class FlightResultsViewModel: FlightResultsViewModelProtocol {
     private let navigator: any Navigator
     private let cellViewModelFactory: any FlightResultCellViewModelFactory
     private let hasInitialFilter: Bool
+    private let placeholderMode: Bool
     private let pageSize = 20
     private var currentOffset = 0
     private var isLoadingPage = false
@@ -34,12 +37,24 @@ final class FlightResultsViewModel: FlightResultsViewModelProtocol {
 
     weak var viewDelegate: (any FlightResultsViewModelViewDelegate)? {
         didSet {
+            if placeholderMode {
+                bind()
+                return
+            }
             if !hasInitialFilter {
                 presentSearchFilter()
             }
             fetchFlights(reset: true)
         }
     }
+
+    var emptyMessage: String {
+        placeholderMode
+            ? "Build a trip to see flight deals"
+            : "No flight deals match your search"
+    }
+
+    var hasResultsToDisplay: Bool { !cellViewModels.isEmpty }
 
     var cellViewModels: [any FlightResultCellViewModelProtocol] = [] { didSet { bind() } }
     var isLoading: Bool = false { didSet { bind() } }
@@ -55,12 +70,14 @@ final class FlightResultsViewModel: FlightResultsViewModelProtocol {
         flightService: any FlightService,
         navigator: any Navigator,
         cellViewModelFactory: any FlightResultCellViewModelFactory,
-        initialFilter: FlightSearchFilter? = nil
+        initialFilter: FlightSearchFilter? = nil,
+        placeholderMode: Bool = false
     ) {
         self.flightService = flightService
         self.navigator = navigator
         self.cellViewModelFactory = cellViewModelFactory
         self.hasInitialFilter = initialFilter != nil
+        self.placeholderMode = placeholderMode
 
         if let initialFilter {
             baseFilter = initialFilter

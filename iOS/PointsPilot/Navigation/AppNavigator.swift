@@ -1,69 +1,79 @@
 import UIKit
 
 final class AppNavigator: NSObject, Navigator, UIAdaptivePresentationControllerDelegate {
-    private var navigationController: UINavigationController?
+    private var primaryNavigationController: UINavigationController?
+    private var secondaryNavigationController: UINavigationController?
     private weak var presentedNavigationController: UINavigationController?
     private var viewControllerFactory: ViewControllerFactory?
 
     private var stack: [NavigationAction] = []
-    
+
+    private var isIPad: Bool {
+        UIDevice.current.userInterfaceIdiom == .pad
+    }
+
     func configure(with factory: ViewControllerFactory) {
         self.viewControllerFactory = factory
     }
 
     func bootstrap(window: UIWindow) {
-        let rootViewController = viewControllerFactory!.makeTripBuilderViewController()
-        navigationController = UINavigationController(rootViewController: rootViewController)
-        presentedNavigationController = navigationController
-        
-        window.rootViewController = navigationController
+        guard let factory = viewControllerFactory else {
+            fatalError("ViewControllerFactory not configured on AppNavigator")
+        }
+
+        let primaryNav = UINavigationController(
+            rootViewController: factory.makeTripBuilderViewController()
+        )
+        primaryNavigationController = primaryNav
+        presentedNavigationController = primaryNav
+
+        if isIPad {
+            let secondaryNav = UINavigationController(
+                rootViewController: factory.makeFlightResultsPlaceholderViewController()
+            )
+            secondaryNavigationController = secondaryNav
+            window.rootViewController = factory.makeSidebarContainerViewController(
+                primaryNav: primaryNav,
+                secondaryNav: secondaryNav
+            )
+        } else {
+            window.rootViewController = primaryNav
+        }
+
         window.makeKeyAndVisible()
     }
 
     func navigate(_ action: NavigationAction) {
         guard let presentedNavigationController else { return }
 
-        stack.append(action)
-        
         switch action {
-        case .modal(let route):
-//            let vc = makeViewController(for: route)
-//            let nav = UINavigationController(rootViewController: vc)
-//            nav.modalPresentationStyle = .formSheet
-//            nav.presentationController?.delegate = self
-//            presentedNavigationController.present(nav, animated: true)
-//            self.presentedNavigationController = nav
+        case .modal:
             break
 
         case .push(let route):
+            if swapDetailColumnIfApplicable(route: route) { return }
+            stack.append(action)
             let vc = makeViewController(for: route)
             presentedNavigationController.pushViewController(vc, animated: true)
 
-        case .bottomSheet(let route):
+        case .bottomSheet:
             break
-//            let vc = makeViewController(for: route)
-//            let nav = UINavigationController(rootViewController: vc)
-//            nav.modalPresentationStyle = .pageSheet
-//            if let sheet = nav.sheetPresentationController {
-//                let collapsedDetentIdentifier: UISheetPresentationController.Detent.Identifier = .init("collapsed")
-//                let collapsed = UISheetPresentationController.Detent.custom(
-//                    identifier: collapsedDetentIdentifier
-//                ) { _ in 100 }
-//                sheet.detents = [collapsed, .medium(), .large()]
-//                sheet.selectedDetentIdentifier = collapsedDetentIdentifier
-//                sheet.prefersGrabberVisible = true
-//                sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-//                sheet.largestUndimmedDetentIdentifier = .medium
-//            }
-//            nav.presentationController?.delegate = self
-//            presentedNavigationController.present(nav, animated: true)
-//            self.presentedNavigationController = nav
         }
     }
 
+    private func swapDetailColumnIfApplicable(route: NavigationRoute) -> Bool {
+        guard case .flightResults(let filter) = route,
+              let secondaryNav = secondaryNavigationController,
+              let factory = viewControllerFactory else {
+            return false
+        }
+
+        let vc = factory.makeFlightResultsViewController(filter: filter)
+        secondaryNav.setViewControllers([vc], animated: false)
+        return true
+    }
+
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-//        let presenting = presentationController.presentingViewController as? UINavigationController
-//        self.presentedNavigationController = presenting ?? navigationController
     }
 
     func dismiss(completion: (() -> Void)? = nil) {
