@@ -9,10 +9,16 @@ final class RemoteFlightRepository: FlightRepository {
 
     func fetchFlights(
         filter: FlightSearchFilter,
+        sort: FlightSort,
         limit: Int,
         offset: Int
-    ) async throws -> SearchResult<Flight> {
-        let request = FlightSearchRequest(filter: filter, limit: limit, offset: offset)
+    ) async throws -> FlightSearchResult {
+        let request = FlightSearchRequest(
+            filter: filter,
+            sort: sort,
+            limit: limit,
+            offset: offset
+        )
         return try await networkClient.get(url: .flights, query: request)
     }
 }
@@ -20,11 +26,15 @@ final class RemoteFlightRepository: FlightRepository {
 // MARK: - URL Endpoints
 
 private extension URL {
-    static var serverBase: URL { URL(string: "http://localhost:4000")! }
-    static var flights: URL { serverBase.appending(path: "flights") }
+    static var flights: URL { base.appending(path: "flights") }
 }
 
 // MARK: - Request
+
+private func commaSeparated(_ values: [String]?) -> String? {
+    guard let values, !values.isEmpty else { return nil }
+    return values.joined(separator: ",")
+}
 
 private struct FlightSearchRequest: Encodable {
     let origin: String?
@@ -42,19 +52,21 @@ private struct FlightSearchRequest: Encodable {
     let upperCostMin: Int?
     let upperCostMax: Int?
     let upperDeal: Bool?
-    let orderBy: String?
+    let orderBy: String
+    let orderDirection: String
     let limit: Int
     let offset: Int
 
     init(
         filter: FlightSearchFilter,
+        sort: FlightSort,
         limit: Int,
         offset: Int
     ) {
-        self.origin = filter.origin
-        self.destination = filter.destination
-        self.originCountry = filter.originCountry
-        self.destinationCountry = filter.destinationCountry
+        self.origin = commaSeparated(filter.origins)
+        self.destination = commaSeparated(filter.destinations)
+        self.originCountry = commaSeparated(filter.originCountries)
+        self.destinationCountry = commaSeparated(filter.destinationCountries)
         self.dateFrom = filter.dateFrom
         self.dateTo = filter.dateTo
         self.economyCostMin = filter.economyCostMin
@@ -66,7 +78,8 @@ private struct FlightSearchRequest: Encodable {
         self.upperCostMin = filter.upperCostMin
         self.upperCostMax = filter.upperCostMax
         self.upperDeal = filter.upperDeal
-        self.orderBy = filter.orderBy
+        self.orderBy = sort.field.rawValue
+        self.orderDirection = sort.direction.rawValue
         self.limit = limit
         self.offset = offset
     }

@@ -1,6 +1,9 @@
 import Foundation
 
-struct SearchResult<T: Decodable>: Decodable {
-    let data: [T]
-    let total: Int?
+struct FlightSearchResult: Decodable {
+    let data: [Flight]
+    let total: Int
+    let maxEconomy: Int
+    let maxPremium: Int
+    let maxUpper: Int
 }

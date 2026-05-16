@@ -2,18 +2,14 @@ import UIKit
 
 enum Theme {
     static var primaryAccent: UIColor {
-        UIColor { traits in
-            traits.userInterfaceStyle == .dark
-                ? UIColor(red: 0.4, green: 0.6, blue: 1.0, alpha: 1.0)
-                : UIColor(red: 0.2, green: 0.4, blue: 0.9, alpha: 1.0)
-        }
+        UIColor(red: 1.0, green: 0.420, blue: 0.290, alpha: 1.0)
     }
 
     static var secondaryAccent: UIColor {
         UIColor { traits in
             traits.userInterfaceStyle == .dark
-                ? UIColor(red: 0.3, green: 0.8, blue: 0.7, alpha: 1.0)
-                : UIColor(red: 0.1, green: 0.6, blue: 0.5, alpha: 1.0)
+                ? UIColor(red: 0.60, green: 0.60, blue: 0.62, alpha: 1.0)
+                : UIColor(red: 0.42, green: 0.42, blue: 0.44, alpha: 1.0)
         }
     }
 
@@ -50,11 +46,7 @@ enum Theme {
     }
 
     static var accentBackground: UIColor {
-        UIColor { traits in
-            traits.userInterfaceStyle == .dark
-                ? primaryAccent.withAlphaComponent(0.15)
-                : primaryAccent.withAlphaComponent(0.08)
-        }
+        primaryAccent.withAlphaComponent(0.13)
     }
 
     static var dealBackground: UIColor {

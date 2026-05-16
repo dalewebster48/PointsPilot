@@ -2,7 +2,7 @@ import { SortOrder } from './types'
 
 type Condition = {
     column: string
-    op: '=' | 'LIKE' | '>=' | '<=' | '>' | '<'
+    op: '=' | 'LIKE' | '>=' | '<=' | '>' | '<' | 'IN'
     value: any
 }
 
@@ -22,7 +22,12 @@ export function buildWhere(conditions: Condition[]): { clause: string; params: a
     const params: any[] = []
 
     for (const c of conditions) {
-        if (c.op === 'LIKE') {
+        if (c.op === 'IN') {
+            const values = c.value as any[]
+            const placeholders = values.map(() => '?').join(', ')
+            parts.push(`${c.column} IN (${placeholders})`)
+            params.push(...values)
+        } else if (c.op === 'LIKE') {
             parts.push(`${c.column} LIKE ?`)
             params.push(`%${c.value}%`)
         } else {
@@ -56,7 +61,13 @@ export function conditionsFromFilter<T extends Record<string, any>>(
     for (const m of mapping) {
         const value = filter[m.key]
         if (value != null) {
-            conditions.push({ column: m.column, op: m.op, value })
+            if (Array.isArray(value)) {
+                if (value.length > 0) {
+                    conditions.push({ column: m.column, op: 'IN', value })
+                }
+            } else {
+                conditions.push({ column: m.column, op: m.op, value })
+            }
         }
     }
     return conditions

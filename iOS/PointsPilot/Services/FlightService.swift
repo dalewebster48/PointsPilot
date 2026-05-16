@@ -3,9 +3,10 @@ import Foundation
 protocol FlightService: AnyObject {
     func searchFlights(
         filter: FlightSearchFilter,
+        sort: FlightSort,
         limit: Int,
         offset: Int
-    ) async throws -> SearchResult<Flight>
+    ) async throws -> FlightSearchResult
 }
 
 final class FlightServiceImpl: FlightService {
@@ -17,11 +18,13 @@ final class FlightServiceImpl: FlightService {
 
     func searchFlights(
         filter: FlightSearchFilter,
+        sort: FlightSort,
         limit: Int,
         offset: Int
-    ) async throws -> SearchResult<Flight> {
+    ) async throws -> FlightSearchResult {
         try await flightRepository.fetchFlights(
             filter: filter,
+            sort: sort,
             limit: limit,
             offset: offset
         )

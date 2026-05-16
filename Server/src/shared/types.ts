@@ -24,10 +24,10 @@ export type Route = {
 }
 
 export type FlightFilter = {
-    origin?: string
-    destination?: string
-    originCountry?: string
-    destinationCountry?: string
+    origin?: string | string[]
+    destination?: string | string[]
+    originCountry?: string | string[]
+    destinationCountry?: string | string[]
     dateFrom?: string
     dateTo?: string
     economyCostMin?: number

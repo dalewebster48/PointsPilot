@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell clipsSubviews="YES" contentMode="scaleToFill" reuseIdentifier="FlightDealCell" id="cell" customClass="FlightDealCell" customModule="PointsPilot" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="96"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="393" height="96"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="LHR  →  LAX" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="route">
+                        <rect key="frame" x="20" y="14" width="200" height="22"/>
+                        <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="19"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="SUN" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="day">
+                        <rect key="frame" x="270" y="18" width="40" height="14"/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="10"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="24 Apr" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="date">
+                        <rect key="frame" x="315" y="18" width="58" height="16"/>
+                        <fontDescription key="fontDescription" type="system" weight="bold" pointSize="13"/>
+                    </label>
+
+                    <!-- ECONOMY column -->
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="30k" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ecoCost">
+                        <rect key="frame" x="20" y="44" width="50" height="22"/>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="19"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="pts" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ecoUnit">
+                        <rect key="frame" x="72" y="50" width="20" height="14"/>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="10"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ecoBar" customClass="ValueBarView" customModule="PointsPilot" customModuleProvider="target">
+                        <rect key="frame" x="20" y="74" width="100" height="3"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="3" id="ebh"/>
+                        </constraints>
+                    </view>
+
+                    <!-- PREMIUM column -->
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="55k" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="preCost">
+                        <rect key="frame" x="144" y="44" width="50" height="22"/>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="19"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="pts" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="preUnit">
+                        <rect key="frame" x="196" y="50" width="20" height="14"/>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="10"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="preBar" customClass="ValueBarView" customModule="PointsPilot" customModuleProvider="target">
+                        <rect key="frame" x="144" y="74" width="100" height="3"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="3" id="pbh"/>
+                        </constraints>
+                    </view>
+
+                    <!-- UPPER column -->
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="135k" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="upCost">
+                        <rect key="frame" x="268" y="44" width="50" height="22"/>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="19"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="pts" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="upUnit">
+                        <rect key="frame" x="320" y="50" width="20" height="14"/>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="10"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="upBar" customClass="ValueBarView" customModule="PointsPilot" customModuleProvider="target">
+                        <rect key="frame" x="268" y="74" width="100" height="3"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="3" id="ubh"/>
+                        </constraints>
+                    </view>
+
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sep">
+                        <rect key="frame" x="20" y="95" width="353" height="1"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="0.5" id="sh"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstItem="route" firstAttribute="leading" secondItem="cell" secondAttribute="leading" constant="20" id="c1"/>
+                <constraint firstItem="route" firstAttribute="top" secondItem="cell" secondAttribute="top" constant="14" id="c2"/>
+                <constraint firstItem="day" firstAttribute="centerY" secondItem="date" secondAttribute="centerY" id="c3"/>
+                <constraint firstItem="day" firstAttribute="trailing" secondItem="date" secondAttribute="leading" constant="-6" id="c4"/>
+                <constraint firstAttribute="trailing" secondItem="date" secondAttribute="trailing" constant="20" id="c5"/>
+                <constraint firstItem="date" firstAttribute="firstBaseline" secondItem="route" secondAttribute="firstBaseline" id="c6"/>
+
+                <constraint firstItem="ecoCost" firstAttribute="leading" secondItem="cell" secondAttribute="leading" constant="20" id="c10"/>
+                <constraint firstItem="ecoCost" firstAttribute="top" secondItem="route" secondAttribute="bottom" constant="8" id="c11"/>
+                <constraint firstItem="ecoUnit" firstAttribute="leading" secondItem="ecoCost" secondAttribute="trailing" constant="3" id="c12"/>
+                <constraint firstItem="ecoUnit" firstAttribute="firstBaseline" secondItem="ecoCost" secondAttribute="firstBaseline" id="c13"/>
+                <constraint firstItem="ecoBar" firstAttribute="leading" secondItem="ecoCost" secondAttribute="leading" id="c14"/>
+                <constraint firstItem="ecoBar" firstAttribute="top" secondItem="ecoCost" secondAttribute="bottom" constant="6" id="c15"/>
+
+                <constraint firstItem="preCost" firstAttribute="leading" secondItem="cell" secondAttribute="centerX" constant="-50" id="c20"/>
+                <constraint firstItem="preCost" firstAttribute="firstBaseline" secondItem="ecoCost" secondAttribute="firstBaseline" id="c21"/>
+                <constraint firstItem="preUnit" firstAttribute="leading" secondItem="preCost" secondAttribute="trailing" constant="3" id="c22"/>
+                <constraint firstItem="preUnit" firstAttribute="firstBaseline" secondItem="preCost" secondAttribute="firstBaseline" id="c23"/>
+                <constraint firstItem="preBar" firstAttribute="leading" secondItem="preCost" secondAttribute="leading" id="c24"/>
+                <constraint firstItem="preBar" firstAttribute="top" secondItem="ecoBar" secondAttribute="top" id="c25"/>
+
+                <constraint firstItem="upCost" firstAttribute="leading" secondItem="cell" secondAttribute="trailing" constant="-125" id="c30"/>
+                <constraint firstItem="upCost" firstAttribute="firstBaseline" secondItem="ecoCost" secondAttribute="firstBaseline" id="c31"/>
+                <constraint firstItem="upUnit" firstAttribute="leading" secondItem="upCost" secondAttribute="trailing" constant="3" id="c32"/>
+                <constraint firstItem="upUnit" firstAttribute="firstBaseline" secondItem="upCost" secondAttribute="firstBaseline" id="c33"/>
+                <constraint firstItem="upBar" firstAttribute="leading" secondItem="upCost" secondAttribute="leading" id="c34"/>
+                <constraint firstItem="upBar" firstAttribute="top" secondItem="ecoBar" secondAttribute="top" id="c35"/>
+
+                <constraint firstItem="ecoBar" firstAttribute="trailing" secondItem="preCost" secondAttribute="leading" constant="-12" id="c40"/>
+                <constraint firstItem="preBar" firstAttribute="trailing" secondItem="upCost" secondAttribute="leading" constant="-12" id="c41"/>
+                <constraint firstAttribute="trailing" secondItem="upBar" secondAttribute="trailing" constant="40" id="c42"/>
+
+                <constraint firstItem="sep" firstAttribute="leading" secondItem="cell" secondAttribute="leading" constant="20" id="s1"/>
+                <constraint firstAttribute="trailing" secondItem="sep" secondAttribute="trailing" constant="20" id="s2"/>
+                <constraint firstAttribute="bottom" secondItem="sep" secondAttribute="bottom" id="s3"/>
+            </constraints>
+            <connections>
+                <outlet property="routeLabel" destination="route" id="o1"/>
+                <outlet property="dayLabel" destination="day" id="o2"/>
+                <outlet property="dateLabel" destination="date" id="o3"/>
+                <outlet property="economyCostLabel" destination="ecoCost" id="o4"/>
+                <outlet property="economyUnitLabel" destination="ecoUnit" id="o5"/>
+                <outlet property="economyBar" destination="ecoBar" id="o6"/>
+                <outlet property="premiumCostLabel" destination="preCost" id="o7"/>
+                <outlet property="premiumUnitLabel" destination="preUnit" id="o8"/>
+                <outlet property="premiumBar" destination="preBar" id="o9"/>
+                <outlet property="upperCostLabel" destination="upCost" id="o10"/>
+                <outlet property="upperUnitLabel" destination="upUnit" id="o11"/>
+                <outlet property="upperBar" destination="upBar" id="o12"/>
+                <outlet property="separatorView" destination="sep" id="o13"/>
+            </connections>
+        </collectionViewCell>
+    </objects>
+</document>

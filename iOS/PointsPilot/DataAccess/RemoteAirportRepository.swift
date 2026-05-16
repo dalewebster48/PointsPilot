@@ -13,7 +13,7 @@ final class RemoteAirportRepository: AirportRepository {
         offset: Int
     ) async throws -> [Airport] {
         let request = AirportSearchRequest(filter: filter, limit: limit, offset: offset)
-        let response: SearchResult<Airport> = try await networkClient.get(url: .airports, query: request)
+        let response: AirportSearchResponse = try await networkClient.get(url: .airports, query: request)
         return response.data
     }
 }
@@ -21,11 +21,14 @@ final class RemoteAirportRepository: AirportRepository {
 // MARK: - URL Endpoints
 
 private extension URL {
-    static var serverBase: URL { URL(string: "http://localhost:4000")! }
-    static var airports: URL { serverBase.appending(path: "airports") }
+    static var airports: URL { base.appending(path: "airports") }
 }
 
 // MARK: - Request
+
+private struct AirportSearchResponse: Decodable {
+    let data: [Airport]
+}
 
 private struct AirportSearchRequest: Encodable {
     let name: String?

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell clipsSubviews="YES" contentMode="scaleToFill" reuseIdentifier="SelectablePillCell" id="cell" customClass="SelectablePillCell" customModule="PointsPilot" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="100" height="32"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="100" height="32"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="labelStack">
+                        <rect key="frame" x="12" y="6" width="76" height="20"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Pill" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="titleLabel">
+                                <rect key="frame" x="28.333333333333336" y="0.0" width="19.666666666666664" height="20"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                <nil key="textColor"/>
+                            </label>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Subtitle" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="subtitleLabel">
+                                <rect key="frame" x="17" y="0.0" width="42" height="0.0"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="11"/>
+                            </label>
+                        </subviews>
+                    </stackView>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="labelStack" secondAttribute="bottom" constant="6" id="bottomConstraint"/>
+                <constraint firstItem="labelStack" firstAttribute="leading" secondItem="cell" secondAttribute="leading" constant="12" id="leadingConstraint"/>
+                <constraint firstItem="labelStack" firstAttribute="top" secondItem="cell" secondAttribute="top" constant="6" id="topConstraint"/>
+                <constraint firstAttribute="trailing" secondItem="labelStack" secondAttribute="trailing" constant="12" id="trailingConstraint"/>
+            </constraints>
+            <connections>
+                <outlet property="bottomConstraint" destination="bottomConstraint" id="o-bottom"/>
+                <outlet property="labelStack" destination="labelStack" id="o-stack"/>
+                <outlet property="leadingConstraint" destination="leadingConstraint" id="o-leading"/>
+                <outlet property="subtitleLabel" destination="subtitleLabel" id="o-subtitle"/>
+                <outlet property="titleLabel" destination="titleLabel" id="o-title"/>
+                <outlet property="topConstraint" destination="topConstraint" id="o-top"/>
+                <outlet property="trailingConstraint" destination="trailingConstraint" id="o-trailing"/>
+            </connections>
+            <point key="canvasLocation" x="139" y="154"/>
+        </collectionViewCell>
+    </objects>
+</document>
