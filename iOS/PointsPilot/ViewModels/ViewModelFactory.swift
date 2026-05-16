@@ -15,7 +15,8 @@ final class ViewModelFactory {
     func makeFlightResultsViewModel() -> FlightResultsViewModel {
         FlightResultsViewModel(
             flightService: services.flightService,
-            navigator: navigator
+            navigator: navigator,
+            cellViewModelFactory: self
         )
     }
 
@@ -25,6 +26,7 @@ final class ViewModelFactory {
         FlightResultsViewModel(
             flightService: services.flightService,
             navigator: navigator,
+            cellViewModelFactory: self,
             initialFilter: filter
         )
     }
@@ -155,6 +157,26 @@ extension ViewModelFactory: DatePickerInputViewModelFactory {
         CalendarInputViewModel(
             parentDelegate: parentDelegate,
             initialRange: initialRange
+        )
+    }
+}
+
+// MARK: - FlightResultCellViewModelFactory
+
+extension ViewModelFactory: FlightResultCellViewModelFactory {
+    func makeFlightResultCellViewModel(
+        flight: Flight,
+        sort: FlightSort,
+        maxEconomy: Int,
+        maxPremium: Int,
+        maxUpper: Int
+    ) -> any FlightResultCellViewModelProtocol {
+        FlightResultCellViewModel(
+            flight: flight,
+            sort: sort,
+            maxEconomy: maxEconomy,
+            maxPremium: maxPremium,
+            maxUpper: maxUpper
         )
     }
 }

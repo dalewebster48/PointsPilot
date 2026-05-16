@@ -1,89 +1,91 @@
 import UIKit
 
 final class FlightDealCell: UICollectionViewCell {
-    @IBOutlet private weak var originCodeLabel: UILabel!
-    @IBOutlet private weak var originNameLabel: UILabel!
-    @IBOutlet private weak var destinationCodeLabel: UILabel!
-    @IBOutlet private weak var destinationNameLabel: UILabel!
+    @IBOutlet private weak var routeLabel: UILabel!
+    @IBOutlet private weak var dayLabel: UILabel!
     @IBOutlet private weak var dateLabel: UILabel!
-    @IBOutlet private weak var economyPointsLabel: UILabel!
-    @IBOutlet private weak var economyDealBadge: UIView!
-    @IBOutlet private weak var premiumPointsLabel: UILabel!
-    @IBOutlet private weak var premiumDealBadge: UIView!
-    @IBOutlet private weak var upperPointsLabel: UILabel!
-    @IBOutlet private weak var upperDealBadge: UIView!
+    @IBOutlet private weak var economyCostLabel: UILabel!
+    @IBOutlet private weak var economyUnitLabel: UILabel!
+    @IBOutlet private weak var economyBar: ValueBarView!
+    @IBOutlet private weak var premiumCostLabel: UILabel!
+    @IBOutlet private weak var premiumUnitLabel: UILabel!
+    @IBOutlet private weak var premiumBar: ValueBarView!
+    @IBOutlet private weak var upperCostLabel: UILabel!
+    @IBOutlet private weak var upperUnitLabel: UILabel!
+    @IBOutlet private weak var upperBar: ValueBarView!
+    @IBOutlet private weak var separatorView: UIView!
 
     static let reuseIdentifier = "FlightDealCell"
 
     override func awakeFromNib() {
         super.awakeFromNib()
         applyTheme()
-        economyDealBadge.layer.cornerRadius = 4
-        premiumDealBadge.layer.cornerRadius = 4
-        upperDealBadge.layer.cornerRadius = 4
     }
 
-    func configure(with flight: Flight) {
-        originCodeLabel.text = flight.origin.id
-        originNameLabel.text = flight.origin.name
-        destinationCodeLabel.text = flight.destination.id
-        destinationNameLabel.text = flight.destination.name
-        dateLabel.text = flight.date
+    func configure(viewModel: any FlightResultCellViewModelProtocol) {
+        routeLabel.text = "\(viewModel.originCode)  →  \(viewModel.destinationCode)"
+        dayLabel.text = viewModel.dayOfWeek
+        dateLabel.text = viewModel.dateText
 
-        configurePoints(
-            label: economyPointsLabel,
-            badge: economyDealBadge,
-            cost: flight.economyCost,
-            isDeal: flight.economyDeal
+        apply(
+            cabin: viewModel.economy,
+            isSortColumn: viewModel.sortField == .economy,
+            costLabel: economyCostLabel,
+            unitLabel: economyUnitLabel,
+            bar: economyBar
         )
-        configurePoints(
-            label: premiumPointsLabel,
-            badge: premiumDealBadge,
-            cost: flight.premiumCost,
-            isDeal: flight.premiumDeal
+        apply(
+            cabin: viewModel.premium,
+            isSortColumn: viewModel.sortField == .premium,
+            costLabel: premiumCostLabel,
+            unitLabel: premiumUnitLabel,
+            bar: premiumBar
         )
-        configurePoints(
-            label: upperPointsLabel,
-            badge: upperDealBadge,
-            cost: flight.upperCost,
-            isDeal: flight.upperDeal
+        apply(
+            cabin: viewModel.upper,
+            isSortColumn: viewModel.sortField == .upper,
+            costLabel: upperCostLabel,
+            unitLabel: upperUnitLabel,
+            bar: upperBar
         )
     }
 
-    private func configurePoints(
-        label: UILabel,
-        badge: UIView,
-        cost: Int,
-        isDeal: Bool
+    private func apply(
+        cabin: CabinResult,
+        isSortColumn: Bool,
+        costLabel: UILabel,
+        unitLabel: UILabel,
+        bar: ValueBarView
     ) {
-        if cost > 0 {
-            label.text = Self.numberFormatter.string(from: NSNumber(value: cost))
+        costLabel.text = cabin.cost
+        costLabel.font = isSortColumn
+            ? .systemFont(ofSize: 22, weight: .heavy)
+            : .systemFont(ofSize: 19, weight: cabin.isDeal ? .heavy : .semibold)
+
+        let primaryColor: UIColor
+        if cabin.isDeal {
+            primaryColor = Theme.primaryAccent
+        } else if isSortColumn {
+            primaryColor = Theme.primaryLabel
         } else {
-            label.text = "—"
+            primaryColor = Theme.secondaryLabel
         }
-        badge.isHidden = !isDeal
+
+        costLabel.textColor = primaryColor
+        unitLabel.textColor = cabin.isDeal ? Theme.primaryAccent : Theme.secondaryLabel
+        bar.fillColor = primaryColor
+        bar.fraction = cabin.barFraction
     }
 
     private func applyTheme() {
         backgroundColor = Theme.background
         contentView.backgroundColor = Theme.background
-        originCodeLabel.textColor = Theme.primaryLabel
-        originNameLabel.textColor = Theme.secondaryLabel
-        destinationCodeLabel.textColor = Theme.primaryLabel
-        destinationNameLabel.textColor = Theme.secondaryLabel
-        dateLabel.textColor = Theme.secondaryLabel
-        economyPointsLabel.textColor = Theme.primaryLabel
-        premiumPointsLabel.textColor = Theme.primaryLabel
-        upperPointsLabel.textColor = Theme.primaryLabel
-        economyDealBadge.backgroundColor = Theme.dealHighlight
-        premiumDealBadge.backgroundColor = Theme.dealHighlight
-        upperDealBadge.backgroundColor = Theme.dealHighlight
+        routeLabel.textColor = Theme.primaryLabel
+        dayLabel.textColor = Theme.secondaryLabel
+        dateLabel.textColor = Theme.primaryLabel
+        economyUnitLabel.text = "pts"
+        premiumUnitLabel.text = "pts"
+        upperUnitLabel.text = "pts"
+        separatorView.backgroundColor = Theme.separator
     }
-
-    private static let numberFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.groupingSeparator = ","
-        return formatter
-    }()
 }

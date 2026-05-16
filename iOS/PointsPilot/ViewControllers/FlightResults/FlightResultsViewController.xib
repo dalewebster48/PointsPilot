@@ -9,6 +9,10 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FlightResultsViewController" customModule="PointsPilot" customModuleProvider="target">
             <connections>
                 <outlet property="view" destination="root" id="ov"/>
+                <outlet property="sortStackView" destination="sortStack" id="oss"/>
+                <outlet property="economyHeaderLabel" destination="ecoHeader" id="oeh"/>
+                <outlet property="premiumHeaderLabel" destination="preHeader" id="oph"/>
+                <outlet property="upperHeaderLabel" destination="upHeader" id="ouh"/>
                 <outlet property="collectionView" destination="cv" id="o1"/>
                 <outlet property="activityIndicator" destination="ai" id="o2"/>
                 <outlet property="emptyLabel" destination="el" id="o3"/>
@@ -21,15 +25,53 @@
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sortScroll">
+                    <rect key="frame" x="0.0" y="0.0" width="393" height="50"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="sortStack">
+                            <rect key="frame" x="20" y="9" width="200" height="32"/>
+                        </stackView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="50" id="ssh"/>
+                        <constraint firstItem="sortStack" firstAttribute="leading" secondItem="sortScroll" secondAttribute="leading" constant="20" id="ss1"/>
+                        <constraint firstItem="sortStack" firstAttribute="top" secondItem="sortScroll" secondAttribute="top" constant="9" id="ss2"/>
+                        <constraint firstAttribute="bottom" secondItem="sortStack" secondAttribute="bottom" constant="9" id="ss3"/>
+                        <constraint firstAttribute="trailing" secondItem="sortStack" secondAttribute="trailing" constant="20" id="ss4"/>
+                    </constraints>
+                </scrollView>
+
+                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="headerStack">
+                    <rect key="frame" x="20" y="50" width="353" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="hsh"/>
+                    </constraints>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="ECONOMY" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ecoHeader">
+                            <rect key="frame" x="0.0" y="0.0" width="117" height="30"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="10"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="PREMIUM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="preHeader">
+                            <rect key="frame" x="117" y="0.0" width="118" height="30"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="10"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="UPPER" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="upHeader">
+                            <rect key="frame" x="235" y="0.0" width="118" height="30"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="10"/>
+                        </label>
+                    </subviews>
+                </stackView>
+
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="cv">
-                    <rect key="frame" x="0.0" y="59" width="393" height="759"/>
+                    <rect key="frame" x="0.0" y="80" width="393" height="738"/>
                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="vertical" minimumLineSpacing="0" minimumInteritemSpacing="10" id="fl">
-                        <size key="itemSize" width="393" height="120"/>
+                        <size key="itemSize" width="393" height="96"/>
                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
                         <size key="footerReferenceSize" width="0.0" height="0.0"/>
                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                     </collectionViewFlowLayout>
                 </collectionView>
+
                 <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="ai">
                     <rect key="frame" x="179" y="408" width="37" height="37"/>
                 </activityIndicatorView>
@@ -55,10 +97,19 @@
             </subviews>
             <viewLayoutGuide key="safeArea" id="sa"/>
             <constraints>
-                <constraint firstItem="cv" firstAttribute="top" secondItem="sa" secondAttribute="top" id="c1"/>
+                <constraint firstItem="sortScroll" firstAttribute="top" secondItem="sa" secondAttribute="top" id="sc1"/>
+                <constraint firstItem="sortScroll" firstAttribute="leading" secondItem="root" secondAttribute="leading" id="sc2"/>
+                <constraint firstItem="sortScroll" firstAttribute="trailing" secondItem="root" secondAttribute="trailing" id="sc3"/>
+
+                <constraint firstItem="headerStack" firstAttribute="top" secondItem="sortScroll" secondAttribute="bottom" id="hs1"/>
+                <constraint firstItem="headerStack" firstAttribute="leading" secondItem="root" secondAttribute="leading" constant="20" id="hs2"/>
+                <constraint firstAttribute="trailing" secondItem="headerStack" secondAttribute="trailing" constant="20" id="hs3"/>
+
+                <constraint firstItem="cv" firstAttribute="top" secondItem="headerStack" secondAttribute="bottom" id="c1"/>
                 <constraint firstItem="cv" firstAttribute="leading" secondItem="sa" secondAttribute="leading" id="c2"/>
                 <constraint firstItem="cv" firstAttribute="trailing" secondItem="sa" secondAttribute="trailing" id="c3"/>
                 <constraint firstItem="cv" firstAttribute="bottom" secondItem="sa" secondAttribute="bottom" id="c4"/>
+
                 <constraint firstItem="ai" firstAttribute="centerX" secondItem="root" secondAttribute="centerX" id="c5"/>
                 <constraint firstItem="ai" firstAttribute="centerY" secondItem="root" secondAttribute="centerY" id="c6"/>
                 <constraint firstItem="el" firstAttribute="centerX" secondItem="root" secondAttribute="centerX" id="c7"/>

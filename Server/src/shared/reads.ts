@@ -106,15 +106,16 @@ export function queryRoutes(
 
 const FLIGHT_SORT_FIELDS: Record<string, string> = {
     date: 'flights.date',
-    economyCost: 'flights.economy_cost',
-    premiumCost: 'flights.premium_cost',
-    upperCost: 'flights.upper_cost'
+    economy: 'flights.economy_cost',
+    premium: 'flights.premium_cost',
+    upper: 'flights.upper_cost'
 }
 
 export function queryFlights(
     db: Database.Database,
     filter?: FlightFilter,
     orderBy?: string,
+    orderDirection?: SortOrder,
     limit: number = 20,
     offset: number = 0
 ) {
@@ -138,15 +139,13 @@ export function queryFlights(
     if (filter?.premiumDeal != null) conditions.push({ column: 'flights.premium_deal', op: '=', value: filter.premiumDeal ? 1 : 0 })
     if (filter?.upperDeal != null) conditions.push({ column: 'flights.upper_deal', op: '=', value: filter.upperDeal ? 1 : 0 })
 
-    // When sorting by cost, exclude zero-cost rows
-    const [sortField, sortDir] = (orderBy?.split(':') ?? []) as [string?, SortOrder?]
-    const sortColumn = sortField ? FLIGHT_SORT_FIELDS[sortField] : undefined
-    if (sortColumn && sortField !== 'date') {
+    const sortColumn = orderBy ? FLIGHT_SORT_FIELDS[orderBy] : undefined
+    if (sortColumn && orderBy !== 'date') {
         conditions.push({ column: sortColumn, op: '>', value: 0 })
     }
 
     const where = buildWhere(conditions)
-    const order = sortColumn ? buildOrderBy(sortColumn, sortDir ?? 'asc') : ''
+    const order = sortColumn ? buildOrderBy(sortColumn, orderDirection ?? 'asc') : ''
     const pagination = buildPagination(limit, offset)
 
     const baseFrom = `
@@ -155,9 +154,24 @@ export function queryFlights(
         LEFT JOIN airports AS ea ON flights.end = ea.id
     `
 
-    // Get total count
-    const countQuery = `SELECT COUNT(*) as total ${baseFrom} ${where.clause}`
-    const total = (db.prepare(countQuery).get(...where.params) as { total: number })?.total ?? 0
+    // Get total count and per-cabin maxes
+    const aggregateQuery = `
+        SELECT COUNT(*) as total,
+               MAX(flights.economy_cost) as maxEconomy,
+               MAX(flights.premium_cost) as maxPremium,
+               MAX(flights.upper_cost) as maxUpper
+        ${baseFrom} ${where.clause}
+    `
+    const aggregate = db.prepare(aggregateQuery).get(...where.params) as {
+        total: number
+        maxEconomy: number | null
+        maxPremium: number | null
+        maxUpper: number | null
+    } | undefined
+    const total = aggregate?.total ?? 0
+    const maxEconomy = aggregate?.maxEconomy ?? 0
+    const maxPremium = aggregate?.maxPremium ?? 0
+    const maxUpper = aggregate?.maxUpper ?? 0
 
     // Get paginated data
     const query = `
@@ -181,5 +195,5 @@ export function queryFlights(
         upperDeal: row.upper_deal === 1
     }))
 
-    return { data, total }
+    return { data, total, maxEconomy, maxPremium, maxUpper }
 }

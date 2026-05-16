@@ -13,4 +13,16 @@ extension DateFormatter {
         formatter.dateFormat = "MMM d"
         return formatter
     }()
+
+    static let dayMonth: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d MMM"
+        return formatter
+    }()
+
+    static let shortDayOfWeek: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEE"
+        return formatter
+    }()
 }

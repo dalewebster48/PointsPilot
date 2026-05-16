@@ -7,13 +7,17 @@ final class FlightResultsViewController: UIViewController {
     enum State {
         case idle
         case loading
-        case loaded(flights: [Flight], hasMore: Bool)
+        case loaded
         case empty
         case error(message: String)
     }
 
     // MARK: - Outlets
 
+    @IBOutlet private weak var sortStackView: UIStackView!
+    @IBOutlet private weak var economyHeaderLabel: UILabel!
+    @IBOutlet private weak var premiumHeaderLabel: UILabel!
+    @IBOutlet private weak var upperHeaderLabel: UILabel!
     @IBOutlet private weak var collectionView: UICollectionView!
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet private weak var emptyLabel: UILabel!
@@ -23,7 +27,8 @@ final class FlightResultsViewController: UIViewController {
     // MARK: - Properties
 
     private let viewModel: any FlightResultsViewModelProtocol
-    private var displayedFlights: [Flight] = []
+    private var displayedCellViewModels: [any FlightResultCellViewModelProtocol] = []
+    private var pillButtons: [FlightSort.Field: UIButton] = [:]
 
     private var state: State = .idle {
         didSet { applyState() }
@@ -52,8 +57,35 @@ final class FlightResultsViewController: UIViewController {
             UINib(nibName: "FlightDealCell", bundle: nil),
             forCellWithReuseIdentifier: FlightDealCell.reuseIdentifier
         )
+        buildSortPills()
         applyTheme()
         viewModel.viewDelegate = self
+    }
+
+    // MARK: - Setup
+
+    private func buildSortPills() {
+        for field in FlightSort.Field.allCases {
+            let button = makePillButton(field: field)
+            sortStackView.addArrangedSubview(button)
+            pillButtons[field] = button
+        }
+    }
+
+    private func makePillButton(field: FlightSort.Field) -> UIButton {
+        let button = UIButton(type: .custom)
+        button.contentEdgeInsets = UIEdgeInsets(top: 7, left: 14, bottom: 7, right: 14)
+        button.titleLabel?.font = .systemFont(ofSize: 13, weight: .semibold)
+        button.layer.cornerRadius = 16
+        button.clipsToBounds = true
+        button.addTarget(self, action: #selector(sortPillTapped(_:)), for: .touchUpInside)
+        button.tag = FlightSort.Field.allCases.firstIndex(of: field) ?? 0
+        return button
+    }
+
+    @objc private func sortPillTapped(_ sender: UIButton) {
+        let field = FlightSort.Field.allCases[sender.tag]
+        viewModel.didSelectSort(field)
     }
 
     // MARK: - Actions
@@ -86,8 +118,7 @@ final class FlightResultsViewController: UIViewController {
             retryButton.isHidden = true
             activityIndicator.startAnimating()
 
-        case .loaded(let flights, let hasMore):
-            displayedFlights = flights
+        case .loaded:
             collectionView.isHidden = false
             emptyLabel.isHidden = true
             errorLabel.isHidden = true
@@ -96,7 +127,6 @@ final class FlightResultsViewController: UIViewController {
             collectionView.reloadData()
 
         case .empty:
-            displayedFlights = []
             collectionView.isHidden = true
             emptyLabel.isHidden = false
             errorLabel.isHidden = true
@@ -112,6 +142,22 @@ final class FlightResultsViewController: UIViewController {
             activityIndicator.stopAnimating()
         }
     }
+
+    // MARK: - Sort UI
+
+    private func updateSortAppearance(activeSort: FlightSort) {
+        for (field, button) in pillButtons {
+            let isActive = field == activeSort.field
+            let title = isActive ? "\(field.label) \(activeSort.direction.arrow)" : field.label
+            button.setTitle(title, for: .normal)
+            button.backgroundColor = isActive ? Theme.primaryLabel : Theme.secondaryBackground
+            button.setTitleColor(isActive ? Theme.background : Theme.secondaryLabel, for: .normal)
+        }
+
+        economyHeaderLabel.textColor = activeSort.field == .economy ? Theme.primaryAccent : Theme.secondaryLabel
+        premiumHeaderLabel.textColor = activeSort.field == .premium ? Theme.primaryAccent : Theme.secondaryLabel
+        upperHeaderLabel.textColor = activeSort.field == .upper ? Theme.primaryAccent : Theme.secondaryLabel
+    }
 }
 
 // MARK: - UICollectionViewDataSource
@@ -121,7 +167,7 @@ extension FlightResultsViewController: UICollectionViewDataSource {
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
     ) -> Int {
-        displayedFlights.count
+        displayedCellViewModels.count
     }
 
     func collectionView(
@@ -132,7 +178,7 @@ extension FlightResultsViewController: UICollectionViewDataSource {
             withReuseIdentifier: FlightDealCell.reuseIdentifier,
             for: indexPath
         ) as! FlightDealCell
-        cell.configure(with: displayedFlights[indexPath.item])
+        cell.configure(viewModel: displayedCellViewModels[indexPath.item])
         return cell
     }
 }
@@ -145,7 +191,7 @@ extension FlightResultsViewController: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        CGSize(width: collectionView.bounds.width, height: 120)
+        CGSize(width: collectionView.bounds.width, height: 96)
     }
 
     func collectionView(
@@ -153,7 +199,7 @@ extension FlightResultsViewController: UICollectionViewDelegateFlowLayout {
         willDisplay cell: UICollectionViewCell,
         forItemAt indexPath: IndexPath
     ) {
-        if indexPath.item >= displayedFlights.count - 5 {
+        if indexPath.item >= displayedCellViewModels.count - 5 {
             viewModel.didScrollNearEnd()
         }
     }
@@ -163,17 +209,17 @@ extension FlightResultsViewController: UICollectionViewDelegateFlowLayout {
 
 extension FlightResultsViewController: FlightResultsViewModelViewDelegate {
     func bind(viewModel: any FlightResultsViewModelProtocol) {
-        if viewModel.isLoading && viewModel.flights.isEmpty {
+        updateSortAppearance(activeSort: viewModel.activeSort)
+        displayedCellViewModels = viewModel.cellViewModels
+
+        if viewModel.isLoading && viewModel.cellViewModels.isEmpty {
             state = .loading
-        } else if let error = viewModel.error, viewModel.flights.isEmpty {
+        } else if let error = viewModel.error, viewModel.cellViewModels.isEmpty {
             state = .error(message: error)
-        } else if viewModel.flights.isEmpty {
+        } else if viewModel.cellViewModels.isEmpty {
             state = .empty
         } else {
-            state = .loaded(
-                flights: viewModel.flights,
-                hasMore: viewModel.hasMorePages
-            )
+            state = .loaded
         }
     }
 }

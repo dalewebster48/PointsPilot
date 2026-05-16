@@ -16,8 +16,6 @@ struct FlightSearchFilter: Equatable {
     var upperCostMin: Int?
     var upperCostMax: Int?
     var upperDeal: Bool?
-    var orderBy: String?
-
     static let empty = FlightSearchFilter()
 
     var isEmpty: Bool { self == .empty }

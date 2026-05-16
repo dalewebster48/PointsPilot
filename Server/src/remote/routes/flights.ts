@@ -31,6 +31,7 @@ export function flightRoutes(fastify: FastifyInstance, db: Db) {
             db.connection,
             filter,
             q.orderBy,
+            q.orderDirection as 'asc' | 'desc' | undefined,
             q.limit ? parseInt(q.limit) : undefined,
             q.offset ? parseInt(q.offset) : undefined
         )
